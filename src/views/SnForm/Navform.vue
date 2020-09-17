@@ -6,22 +6,22 @@
     <div class="Navform-2">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="标题名称">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.navTitle"></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input type="textarea" v-model="form.name"></el-input>
+          <el-input type="textarea" v-model="form.navText"></el-input>
         </el-form-item>
         <el-form-item label="图片链接">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.navImg"></el-input>
         </el-form-item>
         <el-form-item label="分类">
-          <el-select v-model="form.region" placeholder="请选择">
+          <el-select v-model="form.navType" placeholder="请选择">
             <el-option label="收藏" value="收藏"></el-option>
             <el-option label="网站" value="网站"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="前往地址">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.navUrl"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -38,10 +38,11 @@ export default {
   data() {
     return {
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        navTitle: "",
+        navText: "",
+        navImg: "",
+        navType: "",
+        navUrl: "",
         delivery: false,
         type: [],
         resource: "",
@@ -57,11 +58,11 @@ export default {
         method: "POST",
         data: {
           navId: 0,
-          navTitle: "string",
-          navText: "string",
-          navImg: "string",
-          navType: "string",
-          navUrl: "string"
+          navTitle: this.form.navTitle,
+          navText: this.form.navText,
+          navImg: this.form.navImg,
+          navType: this.form.navType,
+          navUrl: this.form.navUrl
         }
       })
         .then(res => {
@@ -87,7 +88,7 @@ export default {
 .Navform {
   width: 75%;
   margin-left: 19%;
-  /* background-color: #468847; */
+  background-color: white;
   .Navform-1 {
     // background-color: #468847;
     padding: 0px 0 20px 0;

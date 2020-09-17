@@ -24,5 +24,6 @@ export default {
 </script>
 <style lang="scss">
 #app {
+  background-color: #f5f7f8;
 }
 </style>

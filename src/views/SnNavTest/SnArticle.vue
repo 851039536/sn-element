@@ -144,10 +144,10 @@ export default {
 
 <style lang="scss" scoped>
 .SnArticle {
-  /*  background-color: #221a0f; */
+  background-color: white;
   width: 75%;
-
   margin-left: 20%;
+
   .SnArticle-1 {
     // background-color: #42b983;
     padding-right: 40px;
