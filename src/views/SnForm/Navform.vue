@@ -1,7 +1,7 @@
 <template>
   <div class="Navform">
     <div class="Navform-1">
-      <el-page-header @back="goBack" content="详情页面"> </el-page-header>
+      <el-page-header @back="goBack" content="内容"> </el-page-header>
     </div>
     <div class="Navform-2">
       <el-form ref="form" :model="form" label-width="80px">
@@ -18,6 +18,7 @@
           <el-select v-model="form.navType" placeholder="请选择">
             <el-option label="收藏" value="收藏"></el-option>
             <el-option label="网站" value="网站"></el-option>
+            <el-option label="博客圈" value="博客圈"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="前往地址">
@@ -91,7 +92,7 @@ export default {
   background-color: white;
   .Navform-1 {
     // background-color: #468847;
-    padding: 0px 0 20px 0;
+    padding: 10px 0 20px 15px;
   }
 
   .Navform-2 {
