@@ -14,7 +14,7 @@ module.exports = {
   productionSourceMap: false, //去掉打包的时候生成的map文件
   lintOnSave: true,
   filenameHashing: false,
-
+  // changOrigin: true, //设置允许跨域
   // webpack-dev-server 相关配置
   //手机查看
   // devServer: {

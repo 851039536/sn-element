@@ -1,7 +1,7 @@
 <template>
   <div class="Navform">
     <div class="Navform-1">
-      <el-page-header @back="goBack" content="内容"> </el-page-header>
+      <el-page-header @back="goBack" content="更新导航内容"> </el-page-header>
     </div>
     <div class="Navform-2">
       <el-form ref="form" :model="form" label-width="80px">
@@ -22,6 +22,7 @@
             <el-option label="VUE" value="VUE"></el-option>
             <el-option label="CSS" value="CSS"></el-option>
             <el-option label="NET" value="NET"></el-option>
+            <el-option label="javascript" value="javascript"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="前往地址">
@@ -47,11 +48,7 @@ export default {
         navImg: "",
         navType: "",
         navUrl: "",
-        navId: 0,
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+        navId: 0
       },
       id: this.$route.query.id,
       navigtion: []
@@ -96,7 +93,6 @@ export default {
         dataType: "json"
       })
         .then(res => {
-          console.log(res);
           if (res.status === 200) {
             alert("更新成功");
             this.$router.push("./SnNavigation");

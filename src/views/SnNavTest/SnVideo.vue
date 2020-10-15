@@ -1,18 +1,14 @@
 <template>
   <div class="SnNavigation">
-    <div class="SnNavigation-3">
-      <el-link :underline="false" @click="alltype('收藏')">收藏</el-link>
-      <el-link :underline="false" @click="alltype('网站')">网站</el-link>
-      <el-link :underline="false" @click="alltype('博客圈')">博客圈</el-link>
-      <el-link :underline="false" @click="alltype('VUE')">VUE</el-link>
-      <el-link :underline="false" @click="alltype('CSS')">CSS</el-link>
-      <el-link :underline="false" @click="alltype('NET')">NET</el-link>
-      <el-link :underline="false" @click="alltype('javascript')"
-        >javascript</el-link
-      >
+    <div class="SnArticle-3">
+      <div class="SnArticle-3-1" v-for="info in videoData" :key="info.vId">
+        <el-link :underline="false" @click="alltype(info.vId)">{{
+          info.vType
+        }}</el-link>
+      </div>
     </div>
     <!-- 升序降序 -->
-    <div class="SnNavigation-1">
+    <div class="SnArticle-1">
       排序
       <el-switch
         v-model="value"
@@ -25,6 +21,7 @@
         >
       </el-switch>
     </div>
+
     <!-- tab列表 -->
     <div class="SnNavigation-2">
       <el-main>
@@ -39,10 +36,10 @@
           "
           style="width: 100% "
         >
-          <el-table-column label="navId" prop="navId"> </el-table-column>
-          <el-table-column label="navTitle" prop="navTitle"> </el-table-column>
-          <el-table-column label="navType" prop="navType"> </el-table-column>
-          <el-table-column label="navUrl" prop="navUrl"> </el-table-column>
+          <el-table-column label="vId" prop="vId"> </el-table-column>
+          <el-table-column label="vData" prop="vData"> </el-table-column>
+          <el-table-column label="vTitle" prop="vTitle"> </el-table-column>
+          <el-table-column label="vTypeid" prop="vTypeid"> </el-table-column>
           <el-table-column align="right">
             <template slot="header">
               <el-link type="primary" @click.native="add(1)">添加信息</el-link>
@@ -78,7 +75,7 @@
 <script>
 import request from "../../network/request.js";
 export default {
-  name: "SnNavigation",
+  name: "SnVideo",
   inject: ["reload"],
   data() {
     return {
@@ -87,9 +84,11 @@ export default {
       total: 20, //默认数据总数
       page: 1, //当前页码
       pagesize: 8, //每页的数据条数
-      navtype: "all", //默认所有
+      vtype: 99999, //默认所有
       fullscreenLoading: false,
-      value: "true"
+      value: "true",
+      videoData: [],
+      typeid: ""
     };
   },
 
@@ -107,7 +106,7 @@ export default {
     },
     GetNavigationCount() {
       request({
-        url: "/api/SnNavigation/GetNavigationCount"
+        url: "/api/SnVideo/GetVideoCount"
       })
         .then(res => {
           this.total = res.data;
@@ -117,18 +116,20 @@ export default {
         });
     },
     handleEdit(index, row) {
-      console.log(index, row.navId, 111111);
+      console.log(index, row.vId, 111111);
 
       // .带参数跳转
       this.$router.push({
-        path: "./Navigationform",
+        path: "./VideoUpform",
         query: {
-          id: row.navId
+          id: row.vId
         }
       });
       // this.$router.push("./Navigationform");
     },
     handleDelete(index, row) {
+      console.log(index, row.vId);
+
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -136,7 +137,7 @@ export default {
       })
         .then(() => {
           request({
-            url: "/api/SnNavigation/AsyDelNavigation?id=" + row.navId,
+            url: "/api/SnVideo/AsyDetVideo?id=" + row.vId,
             method: "delete"
           })
             .then(res => {
@@ -146,7 +147,10 @@ export default {
                   type: "success",
                   message: "删除成功!"
                 });
+
                 this.reload();
+                // this.getgjtype("vue"); // 重新加载数据
+                // this.reload(); // 刷新页面
               } else {
                 this.$message({
                   type: "info",
@@ -163,12 +167,12 @@ export default {
           });
         });
     },
-    //分页查询
+
     GetSnNavigation() {
       request({
         url:
-          "/api/SnNavigation/GetfyNavigation?type=" +
-          this.navtype +
+          "/api/SnVideo/GetfyVideo?type=" +
+          this.vtype +
           "&pageIndex=" +
           this.page +
           "&pageSize=" +
@@ -182,20 +186,31 @@ export default {
         .catch(e => {
           console.log(e + "获取数据失败");
         });
+
+      // 加载分类
+      request({
+        url: "/api/SnVideoType/AsyGestTest"
+      })
+        .then(res => {
+          this.videoData = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
     },
     current_change(val) {
       this.page = val;
       this.GetSnNavigation(this.page, this.value);
     },
     add() {
-      this.$router.push("./Navform");
+      this.$router.push("./Videoform");
     },
-    alltype(name) {
-      this.navtype = name;
+    alltype(typeid) {
+      this.vtype = typeid;
       request({
         url:
-          "/api/SnNavigation/GetfyNavigation?type=" +
-          this.navtype +
+          "/api/SnVideo/GetfyVideo?type=" +
+          this.vtype +
           "&pageIndex=" +
           this.page +
           "&pageSize=" +
@@ -220,21 +235,29 @@ export default {
   width: 75%;
   margin-left: 20%;
   position: relative;
-  .SnNavigation-1 {
+  .SnArticle-1 {
     position: absolute;
-    top: 73px;
+    top: 72px;
     right: 110px;
     z-index: 1;
+  }
+  .SnNavigation-1 {
+    // background-color: #42b983;
+    padding-right: 40px;
   }
 
   .SnNavigation-2 {
     margin: 10px 0 10px 0;
   }
-  .SnNavigation-3 {
+
+  .SnArticle-3 {
     .el-link {
       margin-left: 10px;
       padding: 5px;
     }
+  }
+  .SnArticle-3-1 {
+    display: inline-block;
   }
 }
 </style>

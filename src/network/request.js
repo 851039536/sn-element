@@ -5,6 +5,7 @@ export function request(config) {
   const intstance = axios.create({
     // baseURL: 'http://localhost:8088/',
     baseURL: "http://129.204.92.64:8081/",
+    // baseURL: "https://localhost:44367/",
     timeout: 5000
     // changeOrigin: true,
     // contentType: 'application/json;charset=UTF-8',

@@ -38,13 +38,13 @@
               ></i>
               <span slot="title">文章</span>
             </el-menu-item>
-            <el-menu-item index="4" @click.native="SnNavigation(2)">
+            <el-menu-item index="4" @click.native="SnNavigation(3)">
               <i
                 class="el-icon-chat-square
 
 						"
               ></i>
-              <span slot="title">心情</span>
+              <span slot="title">视频</span>
             </el-menu-item>
             <el-menu-item index="3" disabled>
               <i class="el-icon-document"></i>
@@ -76,6 +76,7 @@ export default {
           this.$router.push("/SnArticle");
           break;
         case 3:
+          this.$router.push("/SnVideo");
           break;
         case 4:
           break;
@@ -98,6 +99,7 @@ export default {
   background-color: white;
   height: 100%;
 }
+
 .el-aside {
   color: #333;
   text-align: center;
