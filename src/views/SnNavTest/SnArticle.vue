@@ -86,7 +86,7 @@ export default {
       page: 1, //当前页码
       pagesize: 8, //每页的数据条数
       fullscreenLoading: false,
-      lbtype: "",
+      lbtype: "00",
       value: "true",
       LabelsData: []
     };
@@ -172,7 +172,9 @@ export default {
     SnArticle() {
       request({
         url:
-          "/api/SnArticle/GetfyTest?label=00&pageIndex=" +
+          "/api/SnArticle/GetfyTest?label=" +
+          this.lbtype +
+          "&pageIndex=" +
           this.page +
           "&pageSize=" +
           this.pagesize +
@@ -202,6 +204,15 @@ export default {
     },
     alltype(typeid) {
       this.lbtype = typeid;
+      request({
+        url: "/api/SnArticle/ConutLabel?type=" + this.lbtype
+      })
+        .then(res => {
+          this.total = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
 
       request({
         url:

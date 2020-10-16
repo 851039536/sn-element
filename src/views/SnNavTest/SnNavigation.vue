@@ -192,6 +192,17 @@ export default {
     },
     alltype(name) {
       this.navtype = name;
+
+      request({
+        url: "/api/SnNavigation/GetNavigationCountType?type=" + this.navtype
+      })
+        .then(res => {
+          this.total = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+
       request({
         url:
           "/api/SnNavigation/GetfyNavigation?type=" +

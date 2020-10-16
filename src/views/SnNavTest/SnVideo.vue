@@ -207,6 +207,17 @@ export default {
     },
     alltype(typeid) {
       this.vtype = typeid;
+
+      request({
+        url: "/api/SnVideo/GetVideoCountType?type=" + this.vtype
+      })
+        .then(res => {
+          this.total = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+
       request({
         url:
           "/api/SnVideo/GetfyVideo?type=" +
@@ -235,12 +246,14 @@ export default {
   width: 75%;
   margin-left: 20%;
   position: relative;
+
   .SnArticle-1 {
     position: absolute;
     top: 72px;
     right: 110px;
     z-index: 1;
   }
+
   .SnNavigation-1 {
     // background-color: #42b983;
     padding-right: 40px;
@@ -256,6 +269,7 @@ export default {
       padding: 5px;
     }
   }
+
   .SnArticle-3-1 {
     display: inline-block;
   }
