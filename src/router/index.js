@@ -56,11 +56,25 @@ const routes = [
   {
     path: "/ArticleUpform",
     name: "ArticleUpform",
-
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/SnUpForm/ArticleUpform.vue"
       )
+  },
+  {
+    path: "/UserTalkUpform",
+    name: "UserTalkUpform",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/SnUpForm/UserTalkUpform.vue"
+      )
+  },
+  {
+    path: "/UserUpform",
+    name: "UserUpform",
+
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/SnUpForm/UserUpform.vue")
   },
   {
     path: "/SnVideo",
@@ -73,6 +87,20 @@ const routes = [
     name: "SnArticle",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/SnNavTest/SnArticle.vue")
+  },
+  {
+    path: "/SnUser",
+    name: "SnUser",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/SnNavTest/SnUser.vue")
+  },
+  {
+    path: "/SnUserTalk",
+    name: "SnUserTalk",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/SnNavTest/SnUserTalk.vue"
+      )
   },
 
   {
@@ -93,6 +121,20 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/SnForm/ArticleAddform.vue"
+      )
+  },
+  {
+    path: "/UserAddform",
+    name: "UserAddform",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/SnForm/UserAddform.vue")
+  },
+  {
+    path: "/UserTalkAddform",
+    name: "UserTalkAddform",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "../views/SnForm/UserTalkAddform.vue"
       )
   }
 ];

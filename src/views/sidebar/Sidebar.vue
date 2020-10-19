@@ -46,6 +46,22 @@
               ></i>
               <span slot="title">视频</span>
             </el-menu-item>
+            <el-menu-item index="5" @click.native="SnNavigation(4)">
+              <i
+                class="el-icon-chat-square
+
+						"
+              ></i>
+              <span slot="title">用户</span>
+            </el-menu-item>
+            <el-menu-item index="6" @click.native="SnNavigation(5)">
+              <i
+                class="el-icon-chat-square
+
+						"
+              ></i>
+              <span slot="title">说说</span>
+            </el-menu-item>
             <el-menu-item index="3" disabled>
               <i class="el-icon-document"></i>
               <span slot="title">导航三</span>
@@ -79,8 +95,11 @@ export default {
           this.$router.push("/SnVideo");
           break;
         case 4:
+          this.$router.push("/SnUser");
+
           break;
         case 5:
+          this.$router.push("/SnUserTalk");
           break;
         default:
           this.$router.push("./Index");

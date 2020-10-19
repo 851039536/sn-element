@@ -1,12 +1,5 @@
 <template>
   <div class="SnNavigation">
-    <div class="SnArticle-3">
-      <div class="SnArticle-3-1" v-for="info in videoData" :key="info.vId">
-        <el-link :underline="false" @click="alltype(info.vId)">{{
-          info.vType
-        }}</el-link>
-      </div>
-    </div>
     <!-- 升序降序 -->
     <div class="SnArticle-1">
       排序
@@ -36,10 +29,10 @@
           "
           style="width: 100% "
         >
-          <el-table-column label="vId" prop="vId"> </el-table-column>
-          <el-table-column label="vData" prop="vData"> </el-table-column>
-          <el-table-column label="vTitle" prop="vTitle"> </el-table-column>
-          <el-table-column label="vTypeid" prop="vTypeid"> </el-table-column>
+          <el-table-column label="id" prop="id"> </el-table-column>
+          <el-table-column label="userId" prop="userId"> </el-table-column>
+          <el-table-column label="talkTime" prop="talkTime"> </el-table-column>
+          <el-table-column label="talkText" prop="talkText"> </el-table-column>
           <el-table-column align="right">
             <template slot="header">
               <el-link type="primary" @click.native="add(1)">添加信息</el-link>
@@ -97,16 +90,16 @@ export default {
     setTimeout(() => {
       this.fullscreenLoading = false;
     }, 300);
-    this.GetNavigationCount();
-    this.GetSnNavigation();
+    this.GetTalkCount();
+    this.GetPagingUser();
   },
   methods: {
     sx(value) {
-      this.GetSnNavigation(1, value);
+      this.GetPagingUser(1, value);
     },
-    GetNavigationCount() {
+    GetTalkCount() {
       request({
-        url: "/api/SnVideo/GetVideoCount"
+        url: "/api/SnUserTalk/GetTalkCount"
       })
         .then(res => {
           this.total = res.data;
@@ -116,19 +109,19 @@ export default {
         });
     },
     handleEdit(index, row) {
-      console.log(index, row.vId, 111111);
+      console.log(index, row.id, 111111);
 
       // .带参数跳转
       this.$router.push({
-        path: "./VideoUpform",
+        path: "./UserTalkUpform",
         query: {
-          id: row.vId
+          id: row.id
         }
       });
       // this.$router.push("./Navigationform");
     },
     handleDelete(index, row) {
-      console.log(index, row.vId);
+      console.log(index, row.id);
 
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -137,7 +130,7 @@ export default {
       })
         .then(() => {
           request({
-            url: "/api/SnVideo/AsyDetVideo?id=" + row.vId,
+            url: "/api/SnUserTalk/AsyDetUserTalk?id=" + row.id,
             method: "delete"
           })
             .then(res => {
@@ -149,8 +142,6 @@ export default {
                 });
 
                 this.reload();
-                // this.getgjtype("vue"); // 重新加载数据
-                // this.reload(); // 刷新页面
               } else {
                 this.$message({
                   type: "info",
@@ -168,12 +159,10 @@ export default {
         });
     },
 
-    GetSnNavigation() {
+    GetPagingUser() {
       request({
         url:
-          "/api/SnVideo/GetfyVideo?type=" +
-          this.vtype +
-          "&pageIndex=" +
+          "/api/SnUserTalk/GetPagingUserTalk?&pageIndex=" +
           this.page +
           "&pageSize=" +
           this.pagesize +
@@ -186,24 +175,13 @@ export default {
         .catch(e => {
           console.log(e + "获取数据失败");
         });
-
-      // 加载分类
-      request({
-        url: "/api/SnVideoType/AsyGestTest"
-      })
-        .then(res => {
-          this.videoData = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
     },
     current_change(val) {
       this.page = val;
-      this.GetSnNavigation(this.page, this.value);
+      this.GetPagingUser(this.page, this.value);
     },
     add() {
-      this.$router.push("./Videoform");
+      this.$router.push("./UserTalkAddform");
     },
     alltype(typeid) {
       this.vtype = typeid;
@@ -248,7 +226,7 @@ export default {
   position: relative;
   .SnArticle-1 {
     position: absolute;
-    top: 72px;
+    top: 34px;
     right: 110px;
     z-index: 1;
   }
