@@ -47,7 +47,7 @@
 
           <el-col :span="24">
             <el-form-item>
-              <el-button type="primary" @click="onSubmit()">Add</el-button>
+              <el-button type="primary" @click="onSubmit()">Up</el-button>
               <el-button>取消</el-button>
             </el-form-item>
           </el-col>
@@ -70,6 +70,8 @@ export default {
         talkGive: 0,
         commentId: 0
       },
+      newtext: [],
+      id: this.$route.query.id,
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -108,46 +110,43 @@ export default {
     getall() {
       // 窗体赋值
       request({
-        url: "/api/SnUser/AsyGetUserId?UserId=" + this.id
+        url: "/api/SnUserTalk/AsyGetTalk?TalkId=" + this.id
       })
         .then(res => {
           this.newtext = res.data[0];
-
-          this.form.userIp = this.newtext.userIp;
-          this.form.userName = this.newtext.userName;
-          this.form.userEmail = this.newtext.userEmail;
-          this.form.userPwd = this.newtext.userPwd;
-          this.form.userPhoto = this.newtext.userPhoto;
-          this.form.userTime = this.newtext.userTime;
-          this.form.userNickname = this.newtext.userNickname;
-          this.form.userBrief = this.newtext.userBrief;
+          this.form.userId = this.newtext.userId;
+          this.form.talkText = this.newtext.talkText;
+          this.form.talkTime = this.newtext.talkTime;
+          this.form.talkRead = this.newtext.talkRead;
+          this.form.talkGive = this.newtext.talkGive;
+          this.form.commentId = this.newtext.commentId;
         })
         .catch(e => {
           console.log(e + "获取数据失败");
         });
     },
-    // 添加数据
+    // 更新数据
     onSubmit() {
       request({
-        // add
-        url: "/api/SnUserTalk/AsyInsUserTalk",
-        method: "post",
+        // up
+        url: "/api/SnUserTalk/AysUpArticle",
+        method: "put",
         data: {
-          id: 0,
-          userId: this.form.userId,
+          id: Number(this.newtext.id),
+          userId: Number(this.form.userId),
           talkText: this.form.talkText,
           talkTime: this.form.talkTime,
-          talkRead: this.form.talkRead,
-          talkGive: this.form.talkGive,
-          commentId: this.form.commentId
+          talkRead: Number(this.form.talkRead),
+          talkGive: Number(this.form.talkGive),
+          commentId: Number(this.form.commentId)
         }
       })
         .then(res => {
           if (res.status === 200) {
-            alert("添加成功");
+            alert("更新成功");
             this.$router.push("./SnUserTalk");
           } else {
-            alert("添加失败");
+            alert("更新失败");
           }
         })
         .catch(console.error.bind(console)); // 异常

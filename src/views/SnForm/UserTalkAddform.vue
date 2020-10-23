@@ -114,9 +114,9 @@ export default {
           userId: Number(this.form.userId),
           talkText: this.form.talkText,
           talkTime: this.form.talkTime,
-          talkRead: this.form.talkRead,
-          talkGive: this.form.talkGive,
-          commentId: this.form.commentId
+          talkRead: Number(this.form.talkRead),
+          talkGive: Number(this.form.talkGive),
+          commentId: Number(this.form.commentId)
         }
       })
         .then(res => {
