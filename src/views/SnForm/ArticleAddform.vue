@@ -4,7 +4,7 @@
       <el-page-header @back="goBack" content="文章内容"> </el-page-header>
     </div>
     <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px" size="small">
         <el-row>
           <el-col :span="24">
             <el-form-item label="标题">
@@ -115,7 +115,6 @@
   </div>
 </template>
 <script>
-import request from "../../network/request.js";
 export default {
   data() {
     return {
@@ -177,7 +176,7 @@ export default {
   methods: {
     // 加载分类 标签
     getall() {
-      request({
+      this.$api({
         url: "/api/SnLabels/GetLabels"
       })
         .then(res => {
@@ -186,7 +185,7 @@ export default {
         .catch(e => {
           console.log(e + "获取数据失败");
         });
-      request({
+      this.$api({
         url: "/api/SnSort/GetSort"
       })
         .then(res => {
@@ -199,7 +198,7 @@ export default {
 
     // 添加数据
     onSubmit() {
-      request({
+      this.$api({
         // add
         url: "/api/SnArticle/AsyInsArticle",
         method: "post",

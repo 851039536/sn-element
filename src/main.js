@@ -10,6 +10,8 @@ import router from "./router";
 import store from "./store";
 //axios的封装
 import request from "@/network/request";
+import ajax from "./api/index";
+Vue.prototype.$api = ajax; // 将api挂载到vue的原型上
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);

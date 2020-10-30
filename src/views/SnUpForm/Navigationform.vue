@@ -4,7 +4,7 @@
       <el-page-header @back="goBack" content="更新导航内容"> </el-page-header>
     </div>
     <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px" size="small">
         <el-form-item label="标题名称">
           <el-input v-model="form.navTitle"></el-input>
         </el-form-item>
@@ -38,7 +38,6 @@
   </div>
 </template>
 <script>
-import request from "../../network/request.js";
 export default {
   data() {
     return {
@@ -59,7 +58,7 @@ export default {
   },
   methods: {
     getall(id) {
-      request({
+      this.$api({
         url: "/api/SnNavigation/GetNavigationId?id=" + id
       })
         .then(res => {
@@ -77,7 +76,7 @@ export default {
     },
 
     onSubmit() {
-      request({
+      this.$api({
         // 更新
         url: "/api/SnNavigation/AysUpNavigation",
         method: "put",
@@ -94,10 +93,17 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            alert("更新成功");
+            this.$notify({
+              title: "更新成功",
+              message: res.statuss,
+              type: "success"
+            });
             this.$router.push("./SnNavigation");
           } else {
-            alert("更新失败");
+            this.$notify.error({
+              title: "更新错误",
+              message: "更新错误"
+            });
           }
         })
         .catch(console.error.bind(console)); // 异常

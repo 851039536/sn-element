@@ -4,7 +4,7 @@
       <el-page-header @back="goBack" content="文章内容"> </el-page-header>
     </div>
     <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px" size="small">
         <el-row>
           <el-col :span="24">
             <el-form-item label="标题">
@@ -113,7 +113,6 @@
   </div>
 </template>
 <script>
-import request from "../../network/request.js";
 export default {
   data() {
     return {
@@ -182,7 +181,7 @@ export default {
   methods: {
     // 窗体赋值
     getall(id) {
-      request({
+      this.$api({
         url: "/api/SnArticle/AsyGetTestID?id=" + id
       })
         .then(res => {
@@ -206,7 +205,7 @@ export default {
         });
 
       // 加载分类
-      request({
+      this.$api({
         url: "/api/SnLabels/GetLabels"
       })
         .then(res => {
@@ -216,7 +215,7 @@ export default {
           console.log(e + "获取数据失败");
         });
       // 加载标签
-      request({
+      this.$api({
         url: "/api/SnSort/GetSort"
       })
         .then(res => {
@@ -228,7 +227,7 @@ export default {
     },
 
     onSubmit() {
-      request({
+      this.$api({
         // 更新
         url: "/api/SnArticle/AysUpArticle",
         method: "put",
@@ -250,10 +249,17 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            alert("更新成功");
+            this.$notify({
+              title: "更新成功",
+              message: res.statuss,
+              type: "success"
+            });
             this.$router.push("./SnArticle");
           } else {
-            alert("更新失败");
+            this.$notify.error({
+              title: "更新错误",
+              message: "更新错误s"
+            });
           }
         })
         .catch(console.error.bind(console)); // 异常

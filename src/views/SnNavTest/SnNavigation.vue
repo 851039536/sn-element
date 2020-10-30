@@ -37,6 +37,10 @@
                 data.name.toLowerCase().includes(search.toLowerCase())
             )
           "
+          :border="true"
+          size="small"
+          :highlight-current-row="true"
+          ss
           style="width: 100% "
         >
           <el-table-column label="navId" prop="navId"> </el-table-column>
@@ -76,7 +80,6 @@
 </template>
 
 <script>
-import request from "../../network/request.js";
 export default {
   name: "SnNavigation",
   inject: ["reload"],
@@ -98,23 +101,40 @@ export default {
     setTimeout(() => {
       this.fullscreenLoading = false;
     }, 300);
-    this.GetNavigationCount();
-    this.GetSnNavigation();
+    this.getall();
   },
   methods: {
+    // 初始化加载
+    getall() {
+      this.$api
+        .all([
+          //总数
+          this.$api.get("/api/SnNavigation/GetNavigationCount"),
+          //分页
+          this.$api.get(
+            "/api/SnNavigation/GetfyNavigation?type=" +
+              this.navtype +
+              "&pageIndex=" +
+              this.page +
+              "&pageSize=" +
+              this.pagesize +
+              "&isDesc=" +
+              this.value
+          )
+        ])
+        .then(
+          this.$api.spread((res1, res2) => {
+            this.total = res1.data;
+            this.tableData = res2.data;
+          })
+        )
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
     sx(value) {
       this.GetSnNavigation(1, value);
-    },
-    GetNavigationCount() {
-      request({
-        url: "/api/SnNavigation/GetNavigationCount"
-      })
-        .then(res => {
-          this.total = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
     },
     handleEdit(index, row) {
       console.log(index, row.navId, 111111);
@@ -135,7 +155,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          request({
+          this.$api({
             url: "/api/SnNavigation/AsyDelNavigation?id=" + row.navId,
             method: "delete"
           })
@@ -165,7 +185,7 @@ export default {
     },
     //分页查询
     GetSnNavigation() {
-      request({
+      this.$api({
         url:
           "/api/SnNavigation/GetfyNavigation?type=" +
           this.navtype +
@@ -185,40 +205,39 @@ export default {
     },
     current_change(val) {
       this.page = val;
-      this.GetSnNavigation(this.page, this.value);
+      this.GetSnNavigation();
     },
     add() {
       this.$router.push("./Navform");
     },
     alltype(name) {
       this.navtype = name;
-
-      request({
-        url: "/api/SnNavigation/GetNavigationCountType?type=" + this.navtype
-      })
-        .then(res => {
-          this.total = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
-
-      request({
-        url:
-          "/api/SnNavigation/GetfyNavigation?type=" +
-          this.navtype +
-          "&pageIndex=" +
-          this.page +
-          "&pageSize=" +
-          this.pagesize +
-          "&isDesc=" +
-          this.value
-      })
-        .then(res => {
-          this.tableData = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
+      this.$api
+        .all([
+          //总数
+          this.$api.get(
+            "/api/SnNavigation/GetNavigationCountType?type=" + this.navtype
+          ),
+          //分页
+          this.$api.get(
+            "/api/SnNavigation/GetfyNavigation?type=" +
+              this.navtype +
+              "&pageIndex=" +
+              this.page +
+              "&pageSize=" +
+              this.pagesize +
+              "&isDesc=" +
+              this.value
+          )
+        ])
+        .then(
+          this.$api.spread((res1, res2) => {
+            this.total = res1.data;
+            this.tableData = res2.data;
+          })
+        )
+        .catch(err => {
+          console.log(err);
         });
     }
   }
@@ -233,7 +252,7 @@ export default {
   position: relative;
   .SnNavigation-1 {
     position: absolute;
-    top: 73px;
+    top: 68px;
     right: 110px;
     z-index: 1;
   }

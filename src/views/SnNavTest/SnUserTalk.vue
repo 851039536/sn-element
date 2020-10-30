@@ -27,6 +27,9 @@
                 data.name.toLowerCase().includes(search.toLowerCase())
             )
           "
+          :border="true"
+          size="small"
+          :highlight-current-row="true"
           style="width: 100% "
         >
           <el-table-column label="id" prop="id"> </el-table-column>
@@ -66,7 +69,6 @@
 </template>
 
 <script>
-import request from "../../network/request.js";
 export default {
   name: "SnVideo",
   inject: ["reload"],
@@ -90,24 +92,50 @@ export default {
     setTimeout(() => {
       this.fullscreenLoading = false;
     }, 300);
-    this.GetTalkCount();
-    this.GetPagingUser();
+    this.getall();
   },
   methods: {
+    // 初始化加载
+    getall() {
+      this.$api
+        .all([
+          //总数
+          this.$api.get("/api/SnUserTalk/GetTalkCount"),
+          //分页
+          this.$api.get(
+            "/api/SnUserTalk/GetPagingUserTalk?&pageIndex=" +
+              this.page +
+              "&pageSize=" +
+              this.pagesize +
+              "&isDesc=" +
+              this.value
+          )
+        ])
+        .then(
+          this.$api.spread((res1, res2) => {
+            this.total = res1.data;
+            this.tableData = res2.data;
+          })
+        )
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
     sx(value) {
       this.GetPagingUser(1, value);
     },
-    GetTalkCount() {
-      request({
-        url: "/api/SnUserTalk/GetTalkCount"
-      })
-        .then(res => {
-          this.total = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
-    },
+    // GetTalkCount() {
+    //   this.$api({
+    //     url: "/api/SnUserTalk/GetTalkCount"
+    //   })
+    //     .then(res => {
+    //       this.total = res.data;
+    //     })
+    //     .catch(e => {
+    //       console.log(e + "获取数据失败");
+    //     });
+    // },
     handleEdit(index, row) {
       console.log(index, row.id, 111111);
 
@@ -129,7 +157,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          request({
+          this.$api({
             url: "/api/SnUserTalk/AsyDetUserTalk?id=" + row.id,
             method: "delete"
           })
@@ -160,7 +188,7 @@ export default {
     },
 
     GetPagingUser() {
-      request({
+      this.$api({
         url:
           "/api/SnUserTalk/GetPagingUserTalk?&pageIndex=" +
           this.page +
@@ -178,7 +206,7 @@ export default {
     },
     current_change(val) {
       this.page = val;
-      this.GetPagingUser(this.page, this.value);
+      this.GetPagingUser();
     },
     add() {
       this.$router.push("./UserTalkAddform");
@@ -186,32 +214,28 @@ export default {
     alltype(typeid) {
       this.vtype = typeid;
 
-      request({
-        url: "/api/SnVideo/GetVideoCountType?type=" + this.vtype
-      })
-        .then(res => {
-          this.total = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
-
-      request({
-        url:
-          "/api/SnVideo/GetfyVideo?type=" +
-          this.vtype +
-          "&pageIndex=" +
-          this.page +
-          "&pageSize=" +
-          this.pagesize +
-          "&isDesc=" +
-          this.value
-      })
-        .then(res => {
-          this.tableData = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
+      this.$api
+        .all([
+          //总数
+          this.$api.get("/api/SnVideo/GetVideoCountType?type=" + this.vtype),
+          //分页
+          this.$api.get(
+            "/api/SnUserTalk/GetPagingUserTalk?&pageIndex=" +
+              this.page +
+              "&pageSize=" +
+              this.pagesize +
+              "&isDesc=" +
+              this.value
+          )
+        ])
+        .then(
+          this.$api.spread((res1, res2) => {
+            this.total = res1.data;
+            this.tableData = res2.data;
+          })
+        )
+        .catch(err => {
+          console.log(err);
         });
     }
   }
@@ -226,7 +250,7 @@ export default {
   position: relative;
   .SnArticle-1 {
     position: absolute;
-    top: 34px;
+    top: 30px;
     right: 110px;
     z-index: 1;
   }
@@ -247,6 +271,9 @@ export default {
   }
   .SnArticle-3-1 {
     display: inline-block;
+    .el-link {
+      font-size: 0.8125rem;
+    }
   }
 }
 </style>

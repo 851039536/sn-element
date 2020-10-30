@@ -4,7 +4,7 @@
       <el-page-header @back="goBack" content="文章内容"> </el-page-header>
     </div>
     <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px" size="small">
         <el-row>
           <el-col :span="12">
             <el-form-item label="ip">
@@ -67,7 +67,6 @@
   </div>
 </template>
 <script>
-import request from "../../network/request.js";
 export default {
   data() {
     return {
@@ -122,7 +121,7 @@ export default {
 
     // 添加数据
     onSubmit() {
-      request({
+      this.$api({
         // add
         url: "/api/SnUser/AsyInsArticle",
         method: "post",

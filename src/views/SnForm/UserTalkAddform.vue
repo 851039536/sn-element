@@ -4,7 +4,7 @@
       <el-page-header @back="goBack" content="添加用户"> </el-page-header>
     </div>
     <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px" size="small">
         <el-row>
           <el-col :span="12">
             <el-form-item label="userId">
@@ -57,7 +57,6 @@
   </div>
 </template>
 <script>
-import request from "../../network/request.js";
 export default {
   data() {
     return {
@@ -105,7 +104,7 @@ export default {
   methods: {
     // 添加数据
     onSubmit() {
-      request({
+      this.$api({
         // add
         url: "/api/SnUserTalk/AsyInsUserTalk",
         method: "post",

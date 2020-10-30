@@ -1,80 +1,96 @@
 <template>
   <div class="SnArticle">
-    <div class="SnArticle-3">
-      <div class="SnArticle-3-1" v-for="info in LabelsData" :key="info.labelId">
-        <el-link :underline="false" @click="alltype(info.labelId)">{{
-          info.labelName
-        }}</el-link>
-      </div>
-    </div>
-    <!-- 升序降序 -->
-    <div class="SnArticle-1">
-      排序
-      <el-switch
-        v-model="value"
-        @click.native="sx(value)"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        active-value="true"
-        inactive-value="false"
-      >
-        >
-      </el-switch>
-    </div>
+    <el-tabs type="border-card">
+      <el-tab-pane label="文章管理">
+        <div class="SnArticle-3">
+          <div
+            class="SnArticle-3-1"
+            v-for="info in LabelsData"
+            :key="info.labelId"
+          >
+            <el-link :underline="false" @click="alltype(info.labelId)">{{
+              info.labelName
+            }}</el-link>
+          </div>
+        </div>
+        <!-- 升序降序 -->
+        <div class="SnArticle-1">
+          排序
+          <el-switch
+            v-model="value"
+            @click.native="sx(value)"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-value="true"
+            inactive-value="false"
+          >
+            >
+          </el-switch>
+        </div>
 
-    <!-- tab列表 -->
-    <div class="SnArticle-2">
-      <el-main>
-        <el-table
-          v-loading.fullscreen.lock="fullscreenLoading"
-          :data="
-            tableData.filter(
-              data =>
-                !search ||
-                data.name.toLowerCase().includes(search.toLowerCase())
-            )
-          "
-          style="width: 100% "
-        >
-          <el-table-column label="articleId" prop="articleId">
-          </el-table-column>
-          <el-table-column label="time" prop="time"> </el-table-column>
-          <el-table-column label="title" prop="title"> </el-table-column>
-          <el-table-column label="labelId" prop="labelId"> </el-table-column>
-          <el-table-column align="right">
-            <template slot="header">
-              <el-link type="primary" @click.native="add(1)">添加信息</el-link>
-            </template>
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)"
-                >Edit</el-button
-              >
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)"
-                >Delete</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
-    </div>
-    <!-- 分页 -->
-    <el-pagination
-      @current-change="current_change"
-      :page="page"
-      :page-size="pagesize"
-      layout="prev, pager, next"
-      :total="total"
-    ></el-pagination>
+        <!-- tab列表 -->
+        <div class="SnArticle-2">
+          <el-main>
+            <el-table
+              v-loading.fullscreen.lock="fullscreenLoading"
+              :data="
+                tableData.filter(
+                  data =>
+                    !search ||
+                    data.name.toLowerCase().includes(search.toLowerCase())
+                )
+              "
+              :border="true"
+              size="small"
+              :highlight-current-row="true"
+              style="width: 100% "
+            >
+              <el-table-column label="articleId" prop="articleId">
+              </el-table-column>
+              <el-table-column label="time" prop="time"> </el-table-column>
+              <el-table-column label="title" prop="title"> </el-table-column>
+              <el-table-column label="labelId" prop="labelId">
+              </el-table-column>
+              <el-table-column align="right">
+                <template slot="header">
+                  <el-link type="primary" @click.native="add(1)"
+                    >添加信息</el-link
+                  >
+                </template>
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    @click="handleEdit(scope.$index, scope.row)"
+                    >Edit</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)"
+                    >Delete</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-main>
+        </div>
+        <!-- 分页 -->
+        <el-pagination
+          @current-change="current_change"
+          :page="page"
+          :page-size="pagesize"
+          layout="prev, pager, next"
+          :total="total"
+        ></el-pagination>
+      </el-tab-pane>
+      <el-tab-pane label="配置管理">配置管理</el-tab-pane>
+      <el-tab-pane label="角色管理">角色管理</el-tab-pane>
+      <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
-import request from "../../network/request.js";
 export default {
   name: "SnArticle",
   inject: ["reload"],
@@ -97,27 +113,48 @@ export default {
     setTimeout(() => {
       this.fullscreenLoading = false;
     }, 200);
-    this.GetArticleCount();
-    this.SnArticle();
+    this.getall();
   },
   methods: {
     sx(value) {
       this.SnArticle(1, value);
     },
-    GetArticleCount() {
-      request({
-        url: "/api/SnArticle/GetArticleCount"
-      })
-        .then(res => {
-          this.total = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
+
+    // 初始化加载
+    getall() {
+      this.$api
+        .all([
+          //总数
+          this.$api.get("/api/SnArticle/GetArticleCount"),
+          //分页
+          this.$api.get(
+            "/api/SnArticle/GetfyTest?label=" +
+              this.lbtype +
+              "&pageIndex=" +
+              this.page +
+              "&pageSize=" +
+              this.pagesize +
+              "&isDesc=" +
+              this.value
+          ),
+          // 加载分类
+          this.$api.get("/api/SnLabels/GetLabels")
+        ])
+        .then(
+          this.$api.spread((res1, res2, res3) => {
+            this.total = res1.data;
+            this.tableData = res2.data;
+            this.LabelsData = res3.data;
+          })
+        )
+        .catch(err => {
+          console.log(err);
         });
     },
+
     current_change(val) {
       this.page = val;
-      this.SnArticle(this.page, this.value);
+      this.SnArticle();
     },
     handleEdit(index, row) {
       // .带参数跳转
@@ -137,7 +174,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          request({
+          this.$api({
             url: "/api/SnArticle/AsyDetArticleId?id=" + row.articleId,
             method: "delete"
           })
@@ -170,7 +207,7 @@ export default {
     },
 
     SnArticle() {
-      request({
+      this.$api({
         url:
           "/api/SnArticle/GetfyTest?label=" +
           this.lbtype +
@@ -189,7 +226,7 @@ export default {
         });
 
       // 加载分类
-      request({
+      this.$api({
         url: "/api/SnLabels/GetLabels"
       })
         .then(res => {
@@ -204,32 +241,30 @@ export default {
     },
     alltype(typeid) {
       this.lbtype = typeid;
-      request({
-        url: "/api/SnArticle/ConutLabel?type=" + this.lbtype
-      })
-        .then(res => {
-          this.total = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
-
-      request({
-        url:
-          "/api/SnArticle/GetfyTest?label=" +
-          this.lbtype +
-          "&pageIndex=" +
-          this.page +
-          "&pageSize=" +
-          this.pagesize +
-          "&isDesc=" +
-          this.value
-      })
-        .then(res => {
-          this.tableData = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
+      this.$api
+        .all([
+          //总数
+          this.$api.get("/api/SnArticle/ConutLabel?type=" + this.lbtype),
+          //分页
+          this.$api.get(
+            "/api/SnArticle/GetfyTest?label=" +
+              this.lbtype +
+              "&pageIndex=" +
+              this.page +
+              "&pageSize=" +
+              this.pagesize +
+              "&isDesc=" +
+              this.value
+          )
+        ])
+        .then(
+          this.$api.spread((res1, res2) => {
+            this.total = res1.data;
+            this.tableData = res2.data;
+          })
+        )
+        .catch(err => {
+          console.log(err);
         });
     }
   }
@@ -242,6 +277,7 @@ export default {
   width: 75%;
   margin-left: 20%;
   position: relative;
+
   .SnArticle-1 {
     position: absolute;
     top: 102px;
@@ -250,16 +286,23 @@ export default {
   }
 
   .SnArticle-2 {
-    margin: 10px 0 10px 0;
+    // background-color: #468847;
+    margin: 3px 0 5px 0;
   }
+
   .SnArticle-3 {
     .el-link {
       margin-left: 10px;
       padding: 5px;
     }
   }
+
   .SnArticle-3-1 {
     display: inline-block;
+    .el-link {
+      // background-color: #42b983;
+      font-size: 0.8125rem;
+    }
   }
 }
 </style>
