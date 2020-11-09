@@ -32,6 +32,11 @@
         <el-menu-item class="sn-SnHeader-1-1" index="6" align="right">
           <a href="http://129.204.92.64:8082/J7YoPEa9/" target="_blank">宝塔</a>
         </el-menu-item>
+        <el-menu-item class="sn-SnHeader-1-1" index="6" align="right">
+          <a href="http://129.204.92.64:8081/index.html" target="_blank"
+            >SN博客 API</a
+          >
+        </el-menu-item>
       </el-menu>
     </div>
   </div>

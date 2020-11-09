@@ -83,16 +83,22 @@
           :total="total"
         ></el-pagination>
       </el-tab-pane>
-      <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理">角色管理</el-tab-pane>
+      <el-tab-pane label="标签管理"> <SnLabels></SnLabels></el-tab-pane>
+      <el-tab-pane label="分类管理"><SnSort></SnSort></el-tab-pane>
       <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
+import SnLabels from "./SnLabels.vue";
+import SnSort from "./SnSort.vue";
 export default {
   name: "SnArticle",
+  components: {
+    SnLabels,
+    SnSort
+  },
   inject: ["reload"],
   data() {
     return {

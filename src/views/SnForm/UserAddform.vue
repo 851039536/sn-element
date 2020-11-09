@@ -112,13 +112,8 @@ export default {
       }
     };
   },
-  created() {
-    this.getall();
-  },
-  methods: {
-    // 加载分类 标签
-    getall() {},
 
+  methods: {
     // 添加数据
     onSubmit() {
       this.$api({
@@ -139,7 +134,10 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            alert("添加成功");
+            this.$message({
+              type: "success",
+              message: "添加成功!"
+            });
             this.$router.push("./SnUser");
           } else {
             alert("添加失败");

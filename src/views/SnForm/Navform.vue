@@ -67,8 +67,10 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            console.log("成功");
-            alert("添加成功");
+            this.$message({
+              type: "success",
+              message: "添加成功!"
+            });
           } else {
             console.log("失败");
             alert("添加失败");

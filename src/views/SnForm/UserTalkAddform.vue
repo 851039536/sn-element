@@ -120,7 +120,10 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            alert("添加成功");
+            this.$message({
+              type: "success",
+              message: "添加成功!"
+            });
             this.$router.push("./SnUserTalk");
           } else {
             alert("添加失败");

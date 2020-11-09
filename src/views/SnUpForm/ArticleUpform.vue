@@ -49,7 +49,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="标签">
+            <el-form-item label="分类">
               <!-- <el-input v-model="sortvalue"></el-input> -->
               <el-select v-model="sortvalue" filterable placeholder="请选择">
                 <el-option
@@ -68,7 +68,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="分类">
+            <el-form-item label="标签">
               <el-select v-model="labelvalue" filterable placeholder="请选择">
                 <el-option
                   v-for="item in labeltest"
