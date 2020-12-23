@@ -1,40 +1,60 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="更新视频内容"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-form-item label="标题名称">
-          <el-input v-model="form.vTitle"></el-input>
-        </el-form-item>
-        <el-form-item label="图片链接">
-          <el-input v-model="form.vImg"></el-input>
-        </el-form-item>
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="更新视频内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-row>
+            <el-form-item label="标题名称">
+              <el-input v-model="form.vTitle"></el-input>
+            </el-form-item>
+            <el-form-item label="图片链接">
+              <el-input v-model="form.vImg"></el-input>
+            </el-form-item>
 
-        <el-form-item label="分类">
-          <el-select v-model="datavalue" filterable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.vId"
-              :label="item.vType"
-              :value="item.vId"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="前往地址">
-          <el-input v-model="form.vUrl"></el-input>
-        </el-form-item>
+            <el-form-item label="图片链接">
+              <el-select v-model="form.vImg" filterable placeholder="请选择">
+                <el-option
+                  v-for="item in imgtest"
+                  :key="item.pictureId"
+                  :label="item.pictureTitle"
+                  :value="item.pictureUrl"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit()">更新</el-button>
-          <el-button>取消</el-button>
-        </el-form-item>
-      </el-form>
+            <el-form-item label="分类">
+              <el-select v-model="datavalue" filterable placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.vId"
+                  :label="item.vType"
+                  :value="item.vId"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="前往地址">
+              <el-input v-model="form.vUrl"></el-input>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit()">更新</el-button>
+              <el-button>取消</el-button>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
     </div>
-  </div>
-</template>
+  </div></template
+>
 <script>
 export default {
   data() {
@@ -50,6 +70,7 @@ export default {
       id: this.$route.query.id,
       newvideo: [],
       options: [],
+      imgtest: [],
       datavalue: ""
     };
   },
@@ -85,6 +106,18 @@ export default {
         .catch(e => {
           console.log(e + "获取数据失败");
         });
+
+      // 加载图床
+      this.$api({
+        url:
+          "/api/SnPicture/GetFyTypeAllAsync?type=3&pageIndex=1&pageSize=100&isDesc=true"
+      })
+        .then(res => {
+          this.imgtest = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
     },
 
     onSubmit() {
@@ -96,7 +129,7 @@ export default {
           vId: this.newvideo.vId,
           vTitle: this.form.vTitle,
           vData: this.form.vData,
-          vImg: "http://oykperson.xyz/img/video/" + this.form.vImg,
+          vImg: this.form.vImg,
           vTypeid: this.datavalue,
           vUrl: this.form.vUrl
         }

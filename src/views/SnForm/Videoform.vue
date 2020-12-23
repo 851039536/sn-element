@@ -1,72 +1,81 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="添加视频内容"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-form-item label="标题名称">
-          <el-input v-model="form.vTitle"></el-input>
-        </el-form-item>
-        <el-form-item label="收藏时间">
-          <!-- <el-input type="text" v-model="form.vData"></el-input> -->
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="添加视频内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="标题名称">
+                <el-input v-model="form.vTitle"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="收藏时间">
+                <!-- <el-input type="text" v-model="form.vData"></el-input> -->
 
-          <el-date-picker
-            v-model="form.vData"
-            type="datetime"
-            placeholder="选择日期时间"
-            default-time="12:00:00"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="图片链接">
-          <el-input v-model="form.vImg"></el-input>
+                <el-date-picker
+                  v-model="form.vData"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  default-time="12:00:00"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="图片链接">
+                <el-input v-model="form.vImg"></el-input>
+              </el-form-item>
+            </el-col>
 
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            action="http://localhost:8081/img/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :file-list="fileList"
-            :auto-upload="false"
-          >
-            <el-button slot="trigger" size="small" type="primary"
-              >选取文件</el-button
-            >
-            <el-button
-              style="margin-left: 10px;"
-              size="small"
-              type="success"
-              @click="submitUpload"
-              >上传到服务器</el-button
-            >
-            <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过500kb
-            </div>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="分类">
-          <el-select v-model="datavalue" filterable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-          <!-- <el-input v-model="form.vTypeid"></el-input> -->
-        </el-form-item>
-        <el-form-item label="前往地址">
-          <el-input v-model="form.vUrl"></el-input>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
-          <el-button>取消</el-button>
-        </el-form-item>
-      </el-form>
+            <el-col :span="12">
+              <el-form-item label="图片链接">
+                <el-select v-model="form.vImg" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in imgtest"
+                    :key="item.pictureId"
+                    :label="item.pictureTitle"
+                    :value="item.pictureUrl"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="分类">
+                <el-select v-model="datavalue" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+                <!-- <el-input v-model="form.vTypeid"></el-input> -->
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="前往地址">
+                <el-input v-model="form.vUrl"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -95,10 +104,28 @@ export default {
         }
       ],
       datavalue: "",
-      fileList: []
+      fileList: [],
+      imgtest: []
     };
   },
+  created() {
+    this.getall();
+  },
+
   methods: {
+    getall() {
+      // 加载图床
+      this.$api({
+        url:
+          "/api/SnPicture/GetFyTypeAllAsync?type=3&pageIndex=1&pageSize=100&isDesc=true"
+      })
+        .then(res => {
+          this.imgtest = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+    },
     onSubmit() {
       this.$api({
         // 添加
@@ -107,7 +134,7 @@ export default {
         data: {
           vTitle: this.form.vTitle,
           vData: this.form.vData,
-          vImg: "http://oykperson.xyz/img/video/" + this.form.vImg,
+          vImg: this.form.vImg,
           vTypeid: this.datavalue,
           vUrl: this.form.vUrl
         }
@@ -148,6 +175,7 @@ export default {
   width: 75%;
   margin-left: 19%;
   background-color: white;
+
   .Navform-1 {
     // background-color: #468847;
     padding: 10px 0 20px 15px;

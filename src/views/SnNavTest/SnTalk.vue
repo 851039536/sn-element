@@ -11,10 +11,10 @@
             <div
               class="SnArticle-3-1"
               v-for="info in LabelsData"
-              :key="info.labelId"
+              :key="info.talkId"
             >
-              <el-link :underline="false" @click="alltype(info.labelId)">{{
-                info.labelName
+              <el-link :underline="false" @click="alltype(info.talkId)">{{
+                info.type
               }}</el-link>
             </div>
           </div>
@@ -50,11 +50,14 @@
                 :highlight-current-row="true"
                 style="width: 100% "
               >
-                <el-table-column label="articleId" prop="articleId">
+                <el-table-column label="id" prop="id"> </el-table-column>
+                <el-table-column label="userId" prop="userId">
                 </el-table-column>
-                <el-table-column label="time" prop="time"> </el-table-column>
-                <el-table-column label="title" prop="title"> </el-table-column>
-                <el-table-column label="labelId" prop="labelId">
+                <el-table-column label="talkTime" prop="talkTime">
+                </el-table-column>
+                <el-table-column label="talkTitle" prop="talkTitle">
+                </el-table-column>
+                <el-table-column label="talkTypeId" prop="talkTypeId">
                 </el-table-column>
                 <el-table-column align="right">
                   <template slot="header">
@@ -88,8 +91,6 @@
             :total="total"
           ></el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="标签管理"> <SnLabels></SnLabels></el-tab-pane>
-        <el-tab-pane label="分类管理"><SnSort></SnSort></el-tab-pane>
         <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
       </el-tabs>
     </div>
@@ -97,14 +98,8 @@
 </template>
 
 <script>
-import SnLabels from "./SnLabels.vue";
-import SnSort from "./SnSort.vue";
 export default {
-  name: "SnArticle",
-  components: {
-    SnLabels,
-    SnSort
-  },
+  name: "SnTalk",
   inject: ["reload"],
   data() {
     return {
@@ -131,18 +126,15 @@ export default {
     sx(value) {
       this.SnArticle(1, value);
     },
-
     // 初始化加载
     getall() {
       this.$api
         .all([
           //总数
-          this.$api.get("/api/SnArticle/GetArticleCount"),
+          this.$api.get("/api/SnTalk/CountAsync"),
           //分页
           this.$api.get(
-            "/api/SnArticle/GetfyTest?label=" +
-              this.lbtype +
-              "&pageIndex=" +
+            "/api/SnTalk/GetFyAllAsync?pageIndex=" +
               this.page +
               "&pageSize=" +
               this.pagesize +
@@ -150,7 +142,7 @@ export default {
               this.value
           ),
           // 加载分类
-          this.$api.get("/api/SnLabels/GetLabels")
+          this.$api.get("/api/SnTalkType/GetAllAsync")
         ])
         .then(
           this.$api.spread((res1, res2, res3) => {
@@ -171,15 +163,13 @@ export default {
     handleEdit(index, row) {
       // .带参数跳转
       this.$router.push({
-        path: "./ArticleUpform",
+        path: "./TalkUpform",
         query: {
-          id: row.articleId
+          id: row.id
         }
       });
     },
     handleDelete(index, row) {
-      alert(row.articleId);
-
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -187,12 +177,12 @@ export default {
       })
         .then(() => {
           this.$api({
-            url: "/api/SnArticle/AsyDetArticleId?id=" + row.articleId,
+            url: "/api/SnTalk/DeleteAsync?id=" + row.id,
             method: "delete"
           })
             .then(res => {
               console.log(res.data);
-              if (res.data === "删除成功") {
+              if (res.data === true) {
                 this.$message({
                   type: "success",
                   message: "删除成功!"
@@ -221,9 +211,7 @@ export default {
     SnArticle() {
       this.$api({
         url:
-          "/api/SnArticle/GetfyTest?label=" +
-          this.lbtype +
-          "&pageIndex=" +
+          "/api/SnTalk/GetFyAllAsync?pageIndex=" +
           this.page +
           "&pageSize=" +
           this.pagesize +
@@ -236,30 +224,20 @@ export default {
         .catch(e => {
           console.log(e + "获取数据失败");
         });
-
-      // 加载分类
-      this.$api({
-        url: "/api/SnLabels/GetLabels"
-      })
-        .then(res => {
-          this.LabelsData = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
     },
     add() {
-      this.$router.push("./ArticleAddform");
+      this.$router.push("./TalkAddform");
     },
     alltype(typeid) {
+      console.log(typeid);
       this.lbtype = typeid;
       this.$api
         .all([
           //总数
-          this.$api.get("/api/SnArticle/ConutLabel?type=" + this.lbtype),
+          this.$api.get("/api/SnTalk/CountTypeAsync?type" + this.lbtype),
           //分页
           this.$api.get(
-            "/api/SnArticle/GetfyTest?label=" +
+            "/api/SnTalk/GetFyTypeAllAsync?type=" +
               this.lbtype +
               "&pageIndex=" +
               this.page +
@@ -292,7 +270,7 @@ export default {
 
   .SnArticle-1 {
     position: absolute;
-    top: 102px;
+    top: 75px;
     right: 110px;
     z-index: 1;
   }

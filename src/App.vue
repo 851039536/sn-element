@@ -1,24 +1,23 @@
 <template>
   <div id="app">
-    <el-header>
+    <!--   <el-header>
       <SnHeader></SnHeader>
-    </el-header>
+    </el-header> -->
     <!-- 侧边栏 -->
-    <Sidebar></Sidebar>
+    <!-- <Sidebar></Sidebar> -->
     <router-view v-if="isRouterAlive"></router-view>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
-import Sidebar from "./views/sidebar/Sidebar.vue";
-import SnHeader from "./views/SnHeader/SnHeader.vue";
+// import Sidebar from "./views/sidebar/Sidebar.vue";
+// import SnHeader from "./views/SnHeader/SnHeader.vue";
 export default {
   name: "app",
   components: {
-    Sidebar,
-    SnHeader
+    // Sidebar,
+    // SnHeader
   },
   provide() {
     //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
@@ -31,13 +30,22 @@ export default {
       isRouterAlive: true //控制视图是否显示的变量
     };
   },
-
+  created() {
+    this.login(this.$store.state.count);
+  },
   methods: {
     reload() {
       this.isRouterAlive = false; //先关闭，
       this.$nextTick(function() {
         this.isRouterAlive = true; //再打开
       });
+    },
+
+    login(id) {
+      console.log(id);
+      if (id == 0) {
+        this.$router.push("/SnLogin");
+      }
     }
   }
 };

@@ -12,7 +12,10 @@ import store from "./store";
 import request from "@/network/request";
 import ajax from "./api/index";
 Vue.prototype.$api = ajax; // 将api挂载到vue的原型上
-
+import SnHeader from "./views/SnHeader/SnHeader.vue";
+Vue.component("SnHeader", SnHeader);
+import Sidebar from "./views/sidebar/Sidebar.vue";
+Vue.component("Sidebar", Sidebar);
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(mavonEditor);

@@ -12,18 +12,31 @@
         <el-form ref="form" :model="form" label-width="80px" size="small">
           <el-row>
             <el-col :span="24">
-              <el-form-item label="分类名称">
-                <el-input v-model="form.sortName"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="分类别名">
-                <el-input v-model="form.sortAlias"></el-input>
+              <el-form-item label="图片链接">
+                <el-input v-model="form.pictureUrl"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24">
               <el-form-item label="描述">
-                <el-input v-model="form.sortDescription"></el-input>
+                <el-input v-model="form.pictureTitle"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item label="图片分类">
+                <el-select
+                  v-model="form.pictureTypeId"
+                  filterable
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in labeltest"
+                    :key="item.id"
+                    :label="item.pictureTypeName"
+                    :value="item.pictureTypeId"
+                  >
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
 
@@ -44,36 +57,49 @@ export default {
   data() {
     return {
       form: {
-        sortId: 0,
-        sortName: "",
-        sortAlias: "",
-        sortDescription: "",
-        parentSortId: 0
-      }
+        pictureId: 0,
+        pictureUrl: "",
+        pictureTitle: "",
+        pictureTypeId: "请选择"
+      },
+      labeltest: []
     };
   },
+  created() {
+    this.getall();
+  },
   methods: {
+    getall() {
+      this.$api({
+        url: "/api/SnPictureType/GetAllAsync"
+      })
+        .then(res => {
+          this.labeltest = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+    },
     // 添加数据
     onSubmit() {
       this.$api({
         // add
-        url: "/api/SnSort/AsyInsSort",
+        url: "/api/SnPicture/AddAsync",
         method: "post",
         data: {
-          sortId: 0,
-          sortName: this.form.sortName,
-          sortAlias: this.form.sortAlias,
-          sortDescription: this.form.sortDescription,
-          parentSortId: 0
+          pictureId: 0,
+          pictureUrl: this.form.pictureUrl,
+          pictureTitle: this.form.pictureTitle,
+          pictureTypeId: Number(this.form.pictureTypeId)
         }
       })
         .then(res => {
-          if (res.status === 200) {
+          if (res.data === true) {
             this.$message({
               type: "success",
               message: "添加成功!"
             });
-            this.$router.push("./SnArticle");
+            this.$router.push("./SnPicture");
           } else {
             alert("添加失败");
           }
@@ -107,7 +133,6 @@ export default {
       width: 100%;
       height: 450px;
     }
-
     .editor-text-1 {
       background-color: #42b983;
       width: 100%;

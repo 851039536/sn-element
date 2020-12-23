@@ -1,61 +1,67 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="添加用户"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="userId">
-              <el-input v-model="form.userId"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="说说内容">
-              <el-input v-model="form.talkText"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="发表时间">
-              <el-date-picker
-                v-model="form.talkTime"
-                align="right"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="添加用户"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="userId">
+                <el-input v-model="form.userId"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="说说内容">
+                <el-input v-model="form.talkText"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="发表时间">
+                <el-date-picker
+                  v-model="form.talkTime"
+                  align="right"
+                  type="date"
+                  placeholder="选择日期"
+                  :picker-options="pickerOptions"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="12">
-            <el-form-item label="阅读">
-              <el-input v-model="form.talkRead"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="点赞">
-              <el-input v-model="form.talkGive"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="评论">
-              <el-input v-model="form.commentId"></el-input>
-            </el-form-item>
-          </el-col>
+            <el-col :span="12">
+              <el-form-item label="阅读">
+                <el-input v-model="form.talkRead"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="点赞">
+                <el-input v-model="form.talkGive"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="评论">
+                <el-input v-model="form.commentId"></el-input>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24">
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit()">Up</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+            <el-col :span="24">
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit()">Up</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
     </div>
-  </div>
-</template>
+  </div></template
+>
 <script>
 export default {
   data() {

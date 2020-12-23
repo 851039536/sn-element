@@ -1,71 +1,81 @@
 <template>
-  <div class="SnNavigation">
-    <!-- 升序降序 -->
-    <div class="SnArticle-1">
-      排序
-      <el-switch
-        v-model="value"
-        @click.native="sx(value)"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        active-value="true"
-        inactive-value="false"
-      >
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="SnNavigation">
+      <!-- 升序降序 -->
+      <div class="SnArticle-1">
+        排序
+        <el-switch
+          v-model="value"
+          @click.native="sx(value)"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          active-value="true"
+          inactive-value="false"
         >
-      </el-switch>
-    </div>
+          >
+        </el-switch>
+      </div>
 
-    <!-- tab列表 -->
-    <div class="SnNavigation-2">
-      <el-main>
-        <el-table
-          v-loading.fullscreen.lock="fullscreenLoading"
-          :data="
-            tableData.filter(
-              data =>
-                !search ||
-                data.name.toLowerCase().includes(search.toLowerCase())
-            )
-          "
-          :border="true"
-          size="small"
-          :highlight-current-row="true"
-          style="width: 100% "
-        >
-          <el-table-column label="userId" prop="userId"> </el-table-column>
-          <el-table-column label="userName" prop="userName"> </el-table-column>
-          <el-table-column label="userEmail" prop="userEmail">
-          </el-table-column>
-          <el-table-column label="userTime" prop="userTime"> </el-table-column>
-          <el-table-column align="right">
-            <template slot="header">
-              <el-link type="primary" @click.native="add(1)">添加信息</el-link>
-            </template>
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)"
-                >Edit</el-button
-              >
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)"
-                >Delete</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
+      <!-- tab列表 -->
+      <div class="SnNavigation-2">
+        <el-main>
+          <el-table
+            v-loading.fullscreen.lock="fullscreenLoading"
+            :data="
+              tableData.filter(
+                data =>
+                  !search ||
+                  data.name.toLowerCase().includes(search.toLowerCase())
+              )
+            "
+            :border="true"
+            size="small"
+            :highlight-current-row="true"
+            style="width: 100% "
+          >
+            <el-table-column label="userId" prop="userId"> </el-table-column>
+            <el-table-column label="userName" prop="userName">
+            </el-table-column>
+            <el-table-column label="userEmail" prop="userEmail">
+            </el-table-column>
+            <el-table-column label="userTime" prop="userTime">
+            </el-table-column>
+            <el-table-column align="right">
+              <template slot="header">
+                <el-link type="primary" @click.native="add(1)"
+                  >添加信息</el-link
+                >
+              </template>
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.$index, scope.row)"
+                  >Edit</el-button
+                >
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                  >Delete</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-main>
+      </div>
+      <!-- 分页 -->
+      <el-pagination
+        @current-change="current_change"
+        :page="page"
+        :page-size="pagesize"
+        layout="prev, pager, next"
+        :total="total"
+      ></el-pagination>
     </div>
-    <!-- 分页 -->
-    <el-pagination
-      @current-change="current_change"
-      :page="page"
-      :page-size="pagesize"
-      layout="prev, pager, next"
-      :total="total"
-    ></el-pagination>
   </div>
 </template>
 

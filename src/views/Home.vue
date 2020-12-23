@@ -1,20 +1,29 @@
 <template>
-  <div class="home"></div>
+	<div>
+		<!-- 		<el-header>
+			<SnHeader></SnHeader>
+		</el-header>
+		<Sidebar></Sidebar> -->
+		<router-view></router-view>
+	</div>
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
-// import Sidebar from "./sidebar/Sidebar.vue";
-// import SnHeader from "./SnHeader/SnHeader.vue";
-// import SnNavigation from "./SnNavigation/SnNavigation.vue";
-export default {
-  name: "Home",
-  components: {
-    // Sidebar,
-    // SnNavigation,
-    // SnHeader
-  }
-};
+	// import Sidebar from "./sidebar/Sidebar.vue";
+	// import SnHeader from "./SnHeader/SnHeader.vue";
+	export default {
+		name: "Home",
+		components: {
+			// Sidebar,
+			// SnHeader
+		}
+	};
 </script>
-<style></style>
+<style>
+	.home {
+		height: 100px;
+		width: 100%;
+
+		background-color: #ee7700;
+	}
+</style>

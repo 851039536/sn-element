@@ -1,22 +1,27 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="用户内容"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="ip">
-              <el-input v-model="form.userIp"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="用户名">
-              <el-input v-model="form.userName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="用户内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="ip">
+                <el-input v-model="form.userIp"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="用户名">
+                <el-input v-model="form.userName" :disabled="true"></el-input>
+              </el-form-item>
+            </el-col>
+            <!--  <el-col :span="12">
             <el-form-item label="时间">
               <el-date-picker
                 v-model="form.userTime"
@@ -27,45 +32,69 @@
               >
               </el-date-picker>
             </el-form-item>
-          </el-col>
+          </el-col> -->
 
-          <el-col :span="12">
-            <el-form-item label="邮箱">
-              <el-input v-model="form.userEmail"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="密码">
-              <el-input v-model="form.userPwd"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="头像">
-              <el-input v-model="form.userPhoto"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="称呼">
-              <el-input v-model="form.userNickname"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="简介">
-              <el-input v-model="form.userBrief"></el-input>
-            </el-form-item>
-          </el-col>
+            <el-col :span="12">
+              <el-form-item label="时间">
+                <el-input v-model="form.userTime" :disabled="true"></el-input>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24">
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit()">put</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+            <el-col :span="12">
+              <el-form-item label="邮箱">
+                <el-input v-model="form.userEmail"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="密码">
+                <el-input v-model="form.userPwd"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="头像">
+                <el-input v-model="form.userPhoto"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="图片路径">
+                <el-select
+                  v-model="form.userPhoto"
+                  filterable
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in imgtest"
+                    :key="item.pictureId"
+                    :label="item.pictureTitle"
+                    :value="item.pictureUrl"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="称呼">
+                <el-input v-model="form.userNickname"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="简介">
+                <el-input v-model="form.userBrief"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit()">put</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
     </div>
-  </div>
-</template>
+  </div></template
+>
 <script>
 export default {
   data() {
@@ -83,6 +112,7 @@ export default {
       },
       id: this.$route.query.id,
       newtext: [],
+      imgtest: [],
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -134,6 +164,18 @@ export default {
           this.form.userTime = this.newtext.userTime;
           this.form.userNickname = this.newtext.userNickname;
           this.form.userBrief = this.newtext.userBrief;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+
+      // 加载图床
+      this.$api({
+        url:
+          "/api/SnPicture/GetFyTypeAllAsync?type=2&pageIndex=1&pageSize=100&isDesc=true"
+      })
+        .then(res => {
+          this.imgtest = res.data;
         })
         .catch(e => {
           console.log(e + "获取数据失败");

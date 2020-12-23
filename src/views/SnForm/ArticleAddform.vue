@@ -1,39 +1,44 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="文章内容"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="标题">
-              <el-input v-model="form.title"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="内容简述">
-              <el-input v-model="form.titleText"></el-input>
-            </el-form-item>
-          </el-col>
-          <!-- <el-col :span="6">
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="文章内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="标题">
+                <el-input v-model="form.title"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="内容简述">
+                <el-input v-model="form.titleText"></el-input>
+              </el-form-item>
+            </el-col>
+            <!-- <el-col :span="6">
             <el-form-item label="发表人">
               <el-input v-model="form.userId"></el-input>
             </el-form-item>
           </el-col> -->
-          <el-col :span="12">
-            <el-form-item label="时间">
-              <el-date-picker
-                v-model="form.time"
-                align="right"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <!-- <el-col :span="4">
+            <el-col :span="12">
+              <el-form-item label="时间">
+                <el-date-picker
+                  v-model="form.time"
+                  align="right"
+                  type="date"
+                  placeholder="选择日期"
+                  :picker-options="pickerOptions"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <!-- <el-col :span="4">
             <el-form-item label="阅读">
               <el-input v-model="form.read"></el-input>
             </el-form-item>
@@ -48,72 +53,91 @@
               <el-input v-model="form.comment"></el-input>
             </el-form-item>
           </el-col> -->
-          <el-col :span="12">
-            <el-form-item label="标签">
-              <!-- <el-input v-model="sortvalue"></el-input> -->
+            <el-col :span="12">
+              <el-form-item label="标签">
+                <!-- <el-input v-model="sortvalue"></el-input> -->
 
-              <el-select v-model="sortvalue" filterable placeholder="请选择">
-                <el-option
-                  v-for="item in sorttest"
-                  :key="item.sortId"
-                  :label="item.sortName"
-                  :value="item.sortId"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+                <el-select v-model="sortvalue" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in sorttest"
+                    :key="item.sortId"
+                    :label="item.sortName"
+                    :value="item.sortId"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="12">
-            <el-form-item label="分类">
-              <el-select v-model="labelvalue" filterable placeholder="请选择">
-                <el-option
-                  v-for="item in labeltest"
-                  :key="item.labelId"
-                  :label="item.labelName"
-                  :value="item.labelId"
+            <el-col :span="12">
+              <el-form-item label="分类">
+                <el-select v-model="labelvalue" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in labeltest"
+                    :key="item.labelId"
+                    :label="item.labelName"
+                    :value="item.labelId"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="分类标题">
+                <el-input v-model="form.typeTitle"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="图片路径">
+                <el-input v-model="form.urlImg"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="图片路径">
+                <el-select
+                  v-model="form.urlImg"
+                  filterable
+                  placeholder="请选择"
                 >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="分类标题">
-              <el-input v-model="form.typeTitle"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="图片路径">
-              <el-input v-model="form.urlImg"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="内容">
-              <!-- <el-input v-model="form.text"></el-input> -->
-              <div class="editor-text">
-                <div class="editor-text-1">
-                  <mavon-editor
-                    v-model="form.text"
-                    :subfield="true"
-                    :boxShadow="false"
-                    defaultOpen="preview"
-                    :toolbarsFlag="true"
-                  />
+                  <el-option
+                    v-for="item in imgtest"
+                    :key="item.pictureId"
+                    :label="item.pictureTitle"
+                    :value="item.pictureUrl"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item label="内容">
+                <!-- <el-input v-model="form.text"></el-input> -->
+                <div class="editor-text">
+                  <div class="editor-text-1">
+                    <mavon-editor
+                      v-model="form.text"
+                      :subfield="true"
+                      :boxShadow="false"
+                      defaultOpen="preview"
+                      :toolbarsFlag="true"
+                    />
+                  </div>
                 </div>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit()">Add</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit()">Add</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
     </div>
-  </div>
-</template>
+  </div></template
+>
 <script>
 export default {
   data() {
@@ -131,14 +155,14 @@ export default {
         comment: "0",
         sortId: 0,
         typeTitle: "string",
-        urlImg: "img"
+        urlImg: "请选择"
       },
       newarticle: [],
       labelvalue: "",
       labeltest: [],
       sortvalue: "",
       sorttest: [],
-
+      imgtest: [],
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -190,6 +214,18 @@ export default {
       })
         .then(res => {
           this.sorttest = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+
+      // 加载图床
+      this.$api({
+        url:
+          "/api/SnPicture/GetFyTypeAllAsync?type=1&pageIndex=1&pageSize=100&isDesc=true"
+      })
+        .then(res => {
+          this.imgtest = res.data;
         })
         .catch(e => {
           console.log(e + "获取数据失败");

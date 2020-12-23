@@ -12,24 +12,37 @@
         <el-form ref="form" :model="form" label-width="80px" size="small">
           <el-row>
             <el-col :span="24">
-              <el-form-item label="名称">
-                <el-input v-model="form.sortName"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="别名">
-                <el-input v-model="form.sortAlias"></el-input>
+              <el-form-item label="图片链接">
+                <el-input v-model="form.pictureUrl"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24">
               <el-form-item label="描述">
-                <el-input v-model="form.sortDescription"></el-input>
+                <el-input v-model="form.pictureTitle"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item label="图片分类">
+                <el-select
+                  v-model="form.pictureTypeId"
+                  filterable
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in labeltest"
+                    :key="item.id"
+                    :label="item.pictureTypeName"
+                    :value="item.pictureTypeId"
+                  >
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
 
             <el-col :span="24">
               <el-form-item>
-                <el-button type="primary" @click="onSubmit()">更新</el-button>
+                <el-button type="primary" @click="onSubmit()">Add</el-button>
                 <el-button>取消</el-button>
               </el-form-item>
             </el-col>
@@ -44,14 +57,14 @@ export default {
   data() {
     return {
       form: {
-        sortId: 0,
-        sortName: "",
-        sortAlias: "",
-        sortDescription: "",
-        parentSortId: 0
+        pictureId: 0,
+        pictureUrl: "",
+        pictureTitle: "",
+        pictureTypeId: "请选择"
       },
-      id: this.$route.query.id,
-      newtext: []
+      labeltest: [],
+      newtext: [],
+      id: this.$route.query.id
     };
   },
   created() {
@@ -60,14 +73,24 @@ export default {
   methods: {
     getall(id) {
       this.$api({
-        url: "/api/SnSort/AsyGetSortId?sortId=" + id
+        url: "/api/SnPictureType/GetAllAsync"
+      })
+        .then(res => {
+          this.labeltest = res.data;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+
+      this.$api({
+        url: "/api/SnPicture/GetAllAsyncID?id=" + id
       })
         .then(res => {
           this.newtext = res.data[0];
-          this.form.sortId = id;
-          this.form.sortName = this.newtext.sortName;
-          this.form.sortAlias = this.newtext.sortAlias;
-          this.form.sortDescription = this.newtext.sortDescription;
+          this.form.pictureId = id;
+          this.form.pictureUrl = this.newtext.pictureUrl;
+          this.form.pictureTitle = this.newtext.pictureTitle;
+          this.form.pictureTypeId = this.newtext.pictureTypeId;
         })
         .catch(e => {
           console.log(e + "获取数据失败");
@@ -75,24 +98,24 @@ export default {
     },
     onSubmit() {
       this.$api({
-        url: "/api/SnSort/AysUpSort",
+        url: "/api/SnPicture/UpdateAsync",
         method: "put",
         data: {
-          sortId: this.newtext.sortId,
-          sortName: this.form.sortName,
-          sortAlias: this.form.sortAlias,
-          sortDescription: this.form.sortDescription,
-          parentSortId: this.form.parentSortId
+          pictureId: this.newtext.pictureId,
+          pictureUrl: this.form.pictureUrl,
+          pictureTitle: this.form.pictureTitle,
+          pictureTypeId: this.form.pictureTypeId
         }
       })
         .then(res => {
-          if (res.status === 200) {
+          if (res.data === true) {
             this.$message({
               type: "success",
               message: "更新成功!"
             });
+            this.$router.push("./SnPicture");
           } else {
-            alert("添加失败");
+            alert("更新失败");
           }
         })
         .catch(console.error.bind(console)); // 异常
@@ -124,7 +147,6 @@ export default {
       width: 100%;
       height: 450px;
     }
-
     .editor-text-1 {
       background-color: #42b983;
       width: 100%;

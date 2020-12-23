@@ -1,42 +1,49 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="添加导航内容"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-form-item label="标题名称">
-          <el-input v-model="form.navTitle"></el-input>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input type="textarea" v-model="form.navText"></el-input>
-        </el-form-item>
-        <el-form-item label="图片链接">
-          <el-input v-model="form.navImg"></el-input>
-        </el-form-item>
-        <el-form-item label="分类">
-          <el-select v-model="form.navType" placeholder="请选择">
-            <el-option label="收藏" value="收藏"></el-option>
-            <el-option label="网站" value="网站"></el-option>
-            <el-option label="博客圈" value="博客圈"></el-option>
-            <el-option label="VUE" value="VUE"></el-option>
-            <el-option label="CSS" value="CSS"></el-option>
-            <el-option label="NET" value="NET"></el-option>
-            <el-option label="javascript" value="javascript"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="前往地址">
-          <el-input v-model="form.navUrl"></el-input>
-        </el-form-item>
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="添加导航内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-form-item label="标题名称">
+            <el-input v-model="form.navTitle"></el-input>
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input type="textarea" v-model="form.navText"></el-input>
+          </el-form-item>
+          <el-form-item label="图片链接">
+            <el-input v-model="form.navImg"></el-input>
+          </el-form-item>
+          <el-form-item label="分类">
+            <el-select v-model="form.navType" placeholder="请选择">
+              <el-option label="收藏" value="收藏"></el-option>
+              <el-option label="网站" value="网站"></el-option>
+              <el-option label="博客圈" value="博客圈"></el-option>
+              <el-option label="VUE" value="VUE"></el-option>
+              <el-option label="CSS" value="CSS"></el-option>
+              <el-option label="NET" value="NET"></el-option>
+              <el-option label="javascript" value="javascript"></el-option>
+              <el-option label="个人工具" value="个人工具"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="前往地址">
+            <el-input v-model="form.navUrl"></el-input>
+          </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
-          <el-button>取消</el-button>
-        </el-form-item>
-      </el-form>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button>取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
-  </div>
-</template>
+  </div></template
+>
 <script>
 export default {
   data() {

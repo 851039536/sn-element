@@ -1,35 +1,41 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="文章内容"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="标签名称">
-              <el-input v-model="form.labelName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="标签别名">
-              <el-input v-model="form.labelAlias"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="标签描述">
-              <el-input v-model="form.labelDescription"></el-input>
-            </el-form-item>
-          </el-col>
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="文章内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="标签名称">
+                <el-input v-model="form.labelName"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="标签别名">
+                <el-input v-model="form.labelAlias"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="标签描述">
+                <el-input v-model="form.labelDescription"></el-input>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24">
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit()">Add</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+            <el-col :span="24">
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit()">Add</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>

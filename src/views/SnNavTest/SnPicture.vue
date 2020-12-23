@@ -11,11 +11,13 @@
             <div
               class="SnArticle-3-1"
               v-for="info in LabelsData"
-              :key="info.labelId"
+              :key="info.pictureTypeId"
             >
-              <el-link :underline="false" @click="alltype(info.labelId)">{{
-                info.labelName
-              }}</el-link>
+              <el-link
+                :underline="false"
+                @click="alltype(info.pictureTypeId)"
+                >{{ info.pictureTypeName }}</el-link
+              >
             </div>
           </div>
           <!-- 升序降序 -->
@@ -50,11 +52,13 @@
                 :highlight-current-row="true"
                 style="width: 100% "
               >
-                <el-table-column label="articleId" prop="articleId">
+                <el-table-column label="pictureId" prop="pictureId">
                 </el-table-column>
-                <el-table-column label="time" prop="time"> </el-table-column>
-                <el-table-column label="title" prop="title"> </el-table-column>
-                <el-table-column label="labelId" prop="labelId">
+                <el-table-column label="pictureUrl" prop="pictureUrl">
+                </el-table-column>
+                <el-table-column label="pictureTitle" prop="pictureTitle">
+                </el-table-column>
+                <el-table-column label="pictureTypeId" prop="pictureTypeId">
                 </el-table-column>
                 <el-table-column align="right">
                   <template slot="header">
@@ -88,8 +92,6 @@
             :total="total"
           ></el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="标签管理"> <SnLabels></SnLabels></el-tab-pane>
-        <el-tab-pane label="分类管理"><SnSort></SnSort></el-tab-pane>
         <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
       </el-tabs>
     </div>
@@ -97,14 +99,8 @@
 </template>
 
 <script>
-import SnLabels from "./SnLabels.vue";
-import SnSort from "./SnSort.vue";
 export default {
-  name: "SnArticle",
-  components: {
-    SnLabels,
-    SnSort
-  },
+  name: "SnPictures",
   inject: ["reload"],
   data() {
     return {
@@ -137,12 +133,10 @@ export default {
       this.$api
         .all([
           //总数
-          this.$api.get("/api/SnArticle/GetArticleCount"),
+          this.$api.get("/api/SnPicture/CountAsync"),
           //分页
           this.$api.get(
-            "/api/SnArticle/GetfyTest?label=" +
-              this.lbtype +
-              "&pageIndex=" +
+            "/api/SnPicture/GetFyAllAsync?pageIndex=" +
               this.page +
               "&pageSize=" +
               this.pagesize +
@@ -150,7 +144,7 @@ export default {
               this.value
           ),
           // 加载分类
-          this.$api.get("/api/SnLabels/GetLabels")
+          this.$api.get("/api/SnPictureType/GetAllAsync")
         ])
         .then(
           this.$api.spread((res1, res2, res3) => {
@@ -171,14 +165,14 @@ export default {
     handleEdit(index, row) {
       // .带参数跳转
       this.$router.push({
-        path: "./ArticleUpform",
+        path: "./SnPictureUpform",
         query: {
-          id: row.articleId
+          id: row.pictureId
         }
       });
     },
     handleDelete(index, row) {
-      alert(row.articleId);
+      alert(row.pictureId);
 
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -187,12 +181,12 @@ export default {
       })
         .then(() => {
           this.$api({
-            url: "/api/SnArticle/AsyDetArticleId?id=" + row.articleId,
+            url: "/api/SnPicture/DeleteAsync?id=" + row.pictureId,
             method: "delete"
           })
             .then(res => {
               console.log(res.data);
-              if (res.data === "删除成功") {
+              if (res.data === true) {
                 this.$message({
                   type: "success",
                   message: "删除成功!"
@@ -221,9 +215,7 @@ export default {
     SnArticle() {
       this.$api({
         url:
-          "/api/SnArticle/GetfyTest?label=" +
-          this.lbtype +
-          "&pageIndex=" +
+          "/api/SnPicture/GetFyAllAsync?pageIndex=" +
           this.page +
           "&pageSize=" +
           this.pagesize +
@@ -237,29 +229,29 @@ export default {
           console.log(e + "获取数据失败");
         });
 
-      // 加载分类
-      this.$api({
-        url: "/api/SnLabels/GetLabels"
-      })
-        .then(res => {
-          this.LabelsData = res.data;
-        })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
+      // // 加载分类
+      // this.$api({
+      //   url: "/api/SnLabels/GetLabels"
+      // })
+      //   .then(res => {
+      //     this.LabelsData = res.data;
+      //   })
+      //   .catch(e => {
+      //     console.log(e + "获取数据失败");
+      //   });
     },
     add() {
-      this.$router.push("./ArticleAddform");
+      this.$router.push("./SnPictureAddform");
     },
     alltype(typeid) {
       this.lbtype = typeid;
       this.$api
         .all([
           //总数
-          this.$api.get("/api/SnArticle/ConutLabel?type=" + this.lbtype),
+          this.$api.get("/api/SnPicture/CountTypeAsync?type=" + this.lbtype),
           //分页
           this.$api.get(
-            "/api/SnArticle/GetfyTest?label=" +
+            "/api/SnPicture/GetFyTypeAllAsync?type=" +
               this.lbtype +
               "&pageIndex=" +
               this.page +
@@ -292,7 +284,7 @@ export default {
 
   .SnArticle-1 {
     position: absolute;
-    top: 102px;
+    top: 75px;
     right: 110px;
     z-index: 1;
   }

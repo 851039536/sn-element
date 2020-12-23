@@ -1,71 +1,77 @@
 <template>
-  <div class="Navform">
-    <div class="Navform-1">
-      <el-page-header @back="goBack" content="文章内容"> </el-page-header>
-    </div>
-    <div class="Navform-2">
-      <el-form ref="form" :model="form" label-width="80px" size="small">
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="ip">
-              <el-input v-model="form.userIp"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="用户名">
-              <el-input v-model="form.userName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="时间">
-              <el-date-picker
-                v-model="form.userTime"
-                align="right"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="文章内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="ip">
+                <el-input v-model="form.userIp"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="用户名">
+                <el-input v-model="form.userName"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="时间">
+                <el-date-picker
+                  v-model="form.userTime"
+                  align="right"
+                  type="date"
+                  placeholder="选择日期"
+                  :picker-options="pickerOptions"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="12">
-            <el-form-item label="邮箱">
-              <el-input v-model="form.userEmail"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="密码">
-              <el-input v-model="form.userPwd"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="头像">
-              <el-input v-model="form.userPhoto"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="称呼">
-              <el-input v-model="form.userNickname"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="简介">
-              <el-input v-model="form.userBrief"></el-input>
-            </el-form-item>
-          </el-col>
+            <el-col :span="12">
+              <el-form-item label="邮箱">
+                <el-input v-model="form.userEmail"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="密码">
+                <el-input v-model="form.userPwd"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="头像">
+                <el-input v-model="form.userPhoto"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="称呼">
+                <el-input v-model="form.userNickname"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="简介">
+                <el-input v-model="form.userBrief"></el-input>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24">
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit()">Add</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+            <el-col :span="24">
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit()">Add</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
     </div>
-  </div>
-</template>
+  </div></template
+>
 <script>
 export default {
   data() {

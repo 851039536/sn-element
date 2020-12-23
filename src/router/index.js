@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import SnNavigation from "../views/SnNavTest/SnNavigation.vue";
 
 //push
 const VueRouterPush = VueRouter.prototype.push;
@@ -19,32 +19,28 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    name: "SnNavigation",
+    component: SnNavigation
   },
   {
     path: "/SnNavigation",
     name: "SnNavigation",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */
-        "../views/SnNavTest/SnNavigation.vue"
-      )
+    component: () => import("../views/SnNavTest/SnNavigation.vue")
+  },
+  {
+    path: "/SnPicture",
+    name: "SnPicture",
+    component: () => import("../views/SnNavTest/SnPicture.vue")
+  },
+  {
+    path: "/SnOne",
+    name: "SnOne",
+    component: () => import("../views/SnNavTest/SnOne.vue")
   },
   {
     path: "/Navigationform",
     name: "Navigationform",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */
-        "../views/SnUpForm/Navigationform.vue"
-      )
+    component: () => import("../views/SnUpForm/Navigationform.vue")
   },
   {
     path: "/VideoUpform",
@@ -88,10 +84,26 @@ const routes = [
     component: () => import("../views/SnUpForm/SnLabelsUpform.vue")
   },
   {
+    path: "/SnPictureUpform",
+    name: "SnPictureUpform",
+
+    component: () => import("../views/SnUpForm/SnPictureUpform.vue")
+  },
+  {
+    path: "/TalkUpform",
+    name: "TalkUpform",
+
+    component: () => import("../views/SnUpForm/TalkUpform.vue")
+  },
+  {
     path: "/SnSortUpform",
     name: "SnSortUpform",
-
     component: () => import("../views/SnUpForm/SnSortUpform.vue")
+  },
+  {
+    path: "/OneUp",
+    name: "OneUp",
+    component: () => import("../views/SnUpForm/OneUp.vue")
   },
   {
     path: "/SnVideo",
@@ -104,6 +116,11 @@ const routes = [
     name: "SnArticle",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/SnNavTest/SnArticle.vue")
+  },
+  {
+    path: "/SnTalk",
+    name: "SnTalk",
+    component: () => import("../views/SnNavTest/SnTalk.vue")
   },
   {
     path: "/SnUser",
@@ -134,6 +151,12 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/SnForm/Videoform.vue")
   },
   {
+    path: "/TalkAddform",
+    name: "TalkAddform",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/SnForm/TalkAddform.vue")
+  },
+  {
     path: "/ArticleAddform",
     name: "ArticleAddform",
     component: () =>
@@ -154,14 +177,30 @@ const routes = [
     component: () => import("../views/SnForm/UserTalkAddform.vue")
   },
   {
+    path: "/SnPictureAddform",
+    name: "SnPictureAddform",
+    component: () => import("../views/SnForm/SnPictureAddform.vue")
+  },
+  {
     path: "/SnSortAddform",
     name: "SnSortAddform",
     component: () => import("../views/SnForm/SnSortAddform.vue")
+  },
+  ,
+  {
+    path: "/SnLogin",
+    name: "SnLogin",
+    component: () => import("../views/SnLogin.vue")
   },
   {
     path: "/SnLabelsAddform",
     name: "SnLabelsAddform",
     component: () => import("../views/SnForm/SnLabelsAddform.vue")
+  },
+  {
+    path: "/OneAdd",
+    name: "OneAdd",
+    component: () => import("../views/SnForm/OneAdd.vue")
   }
 ];
 
