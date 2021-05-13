@@ -106,10 +106,10 @@ export default {
       this.$api
         .all([
           //总数
-          this.$api.get("/api/SnLabels/GetLabelsCount"),
+          this.$api.get("/api/SnLabels/GetCountAsync"),
           //分页
           this.$api.get(
-            "/api/SnLabels/GetfyTest?pageIndex=" +
+            "/api/SnLabels/GetfyAllAsync?pageIndex=" +
               this.page +
               "&pageSize=" +
               this.pagesize +
@@ -181,7 +181,7 @@ export default {
     GetPaging() {
       this.$api({
         url:
-          "/api/SnLabels/GetfyTest?pageIndex=" +
+          "/api/SnLabels/GetfyAllAsync?pageIndex=" +
           this.page +
           "&pageSize=" +
           this.pagesize +
@@ -230,16 +230,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-
-      // this.$api({
-      //   url: "/api/SnVideo/GetVideoCountType?type=" + this.vtype
-      // })
-      //   .then(res => {
-      //     this.total = res.data;
-      //   })
-      //   .catch(e => {
-      //     console.log(e + "获取数据失败");
-      //   });
     }
   }
 };

@@ -1,151 +1,104 @@
 <template>
-  <div class="wrap" id="wrap">
-    <div class="logGet">
-      <!-- 头部提示信息 -->
-      <div class="logD logDtip">
-        <p class="p1">登录</p>
-      </div>
-      <!-- 输入框 -->
-      <div class="lgD">
-        <!-- <img src="assets/logo.png" width="20" height="20" alt="" /> -->
-        <input type="text" placeholder="输入用户名" />
-      </div>
-      <div class="lgD">
-        <!-- <img src="img/logPwd.png" width="20" height="20" alt="" /> -->
-        <input type="text" placeholder="输入用户密码" />
-      </div>
-      <div class="logC">
-        <a><button @click="login">登 录</button></a>
-      </div>
+  <div>
+    <!--flex弹性盒子模型，justify-content：主抽 -->
+    <div style="display: flex;justify-content: center;margin-top: 150px">
+      <el-card style="width: 400px">
+        <div slot="header" class="clearfix">
+          <span>登录</span>
+        </div>
+        <table>
+          <tr>
+            <td>用户名</td>
+            <td>
+              <el-input
+                v-model="user.username"
+                placeholder="请输入用户名"
+              ></el-input>
+            </td>
+          </tr>
+          <tr>
+            <td>密码</td>
+            <td>
+              <el-input
+                type="password"
+                v-model="user.password"
+                placeholder="请输入密码"
+                @keydown.enter.native="doLogin"
+              ></el-input>
+              <!-- @keydown.enter.native="doLogin"当按下enter键的时候也会执行doLogin方法-->
+            </td>
+          </tr>
+          <tr>
+            <!-- 占两行-->
+            <td colspan="2">
+              <!-- 点击事件的两种不同的写法v-on:click和 @click-->
+              <!--<el-button style="width: 300px" type="primary" v-on:click="doLogin">登录</el-button>-->
+              <el-button style="width: 300px" type="primary" @click="doLogin"
+                >登录</el-button
+              >
+            </td>
+          </tr>
+        </table>
+      </el-card>
     </div>
   </div>
 </template>
-
 <script>
+import { mapMutations } from "vuex";
 export default {
+  //单页面中不支持前面的data:{}方式
+  data() {
+    //相当于以前的function data(){},这是es5之前的写法，新版本可以省略掉function
+    return {
+      //之前是在里面直接写username，password等等，但是这里要写return
+      //因为一个组件不管要不要被其他组件用，只要这样定义了，它就会认为可能这个组件会在其他的组件中使用
+      //比如说在这里定义了一个变量，然后把这个组件引入到A组件中，A组件中修改了这个变量
+      //同时这个组件也在B组件中引用了，这时候A里面一修改，B里面也变了，它们用的是一个值
+      //可是一般来说可能希望在不同的组件中引用的时候，使用不同的值，所以这里要用return
+      //这样在A组件和B组件分别引用这个变量的时候是不会互相影响的
+      result: "",
+      result1: [],
+      user: {
+        username: "kai",
+        password: "kai"
+        //为了登录方便，可以直接在这里写好用户名和密码的值
+      }
+    };
+  },
   methods: {
-    login() {
-      // 假设登陆成功，则跳转到 index 组件
-      this.$router.replace("/SnNavigation");
+    ...mapMutations(["changeLogin"]),
+    doLogin() {
+      //一点击登录按钮，这个方法就会执行
+      // alert(JSON.stringify(this.user)); //可以直接把this.user对象传给后端进行校验用户名和密码
+      this.$api
+        .all([
+          //总数
+          this.$api.get(
+            "/api/SnUser/Login?users=" +
+              this.user.username +
+              "&pwd=" +
+              this.user.password
+          )
+        ])
+        .then(
+          this.$api.spread(res1 => {
+            this.result = res1.data;
+            this.result1 = this.result.split(",");
+            if (this.result1[0] === "1") {
+              this.userToken = "Bearer " + this.result1[1];
+              // 将用户token保存到vuex中
+              this.changeLogin({ Authorization: this.userToken });
+
+              // this.$store.state.token = this.result1[1];
+              // alert(this.$store.state.token);
+              this.$router.replace("/SnNavigation");
+            }
+          })
+        )
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
 </script>
-
-<style>
-body {
-  /* background-image: url(../assets/timg2.jpg); */
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-#wrap {
-  height: 600px;
-  width: 100%;
-  background-position: center center;
-  position: relative;
-}
-
-#head {
-  height: 120px;
-  width: 100;
-  background-color: #66cccc;
-  text-align: center;
-  position: relative;
-}
-
-#wrap .logGet {
-  height: 408px;
-  width: 368px;
-  position: absolute;
-  background-color: #ffffff;
-  top: 100px;
-  right: 15%;
-}
-
-.logC a button {
-  width: 100%;
-  height: 45px;
-  background-color: #ee7700;
-  border: none;
-  color: white;
-  font-size: 18px;
-}
-
-.logGet .logD.logDtip .p1 {
-  display: inline-block;
-  font-size: 28px;
-  margin-top: 30px;
-  width: 86%;
-}
-
-#wrap .logGet .logD.logDtip {
-  width: 86%;
-  border-bottom: 1px solid #ee7700;
-  margin-bottom: 60px;
-  margin-top: 0px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.logGet .lgD img {
-  position: absolute;
-  top: 12px;
-  left: 8px;
-}
-
-.logGet .lgD input {
-  width: 100%;
-  height: 42px;
-  text-indent: 2.5rem;
-}
-
-#wrap .logGet .lgD {
-  width: 86%;
-  position: relative;
-  margin-bottom: 30px;
-  margin-top: 30px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-#wrap .logGet .logC {
-  width: 86%;
-  margin-top: 0px;
-  margin-right: auto;
-  margin-bottom: 0px;
-  margin-left: auto;
-}
-
-.title {
-  font-family: "宋体";
-  color: #ffffff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* 使用css3的transform来实现 */
-  font-size: 36px;
-  height: 40px;
-  width: 30%;
-}
-
-.copyright {
-  font-family: "宋体";
-  color: #ffffff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* 使用css3的transform来实现 */
-  height: 60px;
-  width: 40%;
-  text-align: center;
-}
-</style>
