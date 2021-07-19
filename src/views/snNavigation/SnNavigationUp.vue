@@ -1,0 +1,146 @@
+<template>
+  <div>
+    <el-header>
+      <SnHeader></SnHeader>
+    </el-header>
+    <Sidebar></Sidebar>
+    <div class="Navform">
+      <div class="Navform-1">
+        <el-page-header @back="goBack" content="更新导航内容"> </el-page-header>
+      </div>
+      <div class="Navform-2">
+        <el-form ref="form" :model="form" label-width="80px" size="small">
+          <el-form-item label="标题名称">
+            <el-input v-model="form.navTitle"></el-input>
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input type="textarea" v-model="form.navText"></el-input>
+          </el-form-item>
+          <el-form-item label="图片链接">
+            <el-input v-model="form.navImg"></el-input>
+          </el-form-item>
+          <el-form-item label="分类">
+            <el-select v-model="form.navType" placeholder="请选择">
+              <el-option label="收藏" value="收藏"></el-option>
+              <el-option label="网站" value="网站"></el-option>
+              <el-option label="博客圈" value="博客圈"></el-option>
+              <el-option label="VUE" value="VUE"></el-option>
+              <el-option label="CSS" value="CSS"></el-option>
+              <el-option label="NET" value="NET"></el-option>
+              <el-option label="javascript" value="javascript"></el-option>
+              <el-option label="个人工具" value="个人工具"></el-option>
+              <el-option label="论坛" value="论坛"></el-option>
+              <el-option label="导航" value="导航"></el-option>
+              <el-option label="CSS框架" value="CSS框架"></el-option>
+              <el-option label="文档" value="文档"></el-option>
+              <el-option label="工具" value="工具"></el-option>
+              <el-option label="学习" value="学习"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="前往地址">
+            <el-input v-model="form.navUrl"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit()">更新</el-button>
+            <el-button>取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+  </div></template
+>
+<script>
+export default {
+  data() {
+    return {
+      form: {
+        navTitle: "",
+        navText: "",
+        navImg: "",
+        navType: "",
+        navUrl: "",
+        navId: 0
+      },
+      id: this.$route.query.id,
+      navigtion: []
+    };
+  },
+  created() {
+    this.getall(this.id);
+  },
+  methods: {
+    getall(id) {
+      this.$api({
+        url: "/api/SnNavigation/GetByIdAsync?id=" + id
+      })
+        .then(res => {
+          this.navigtion = res.data;
+          this.form.navId = id;
+          this.form.navTitle = this.navigtion.navTitle;
+          this.form.navText = this.navigtion.navText;
+          this.form.navImg = this.navigtion.navImg;
+          this.form.navType = this.navigtion.navType;
+          this.form.navUrl = this.navigtion.navUrl;
+        })
+        .catch(e => {
+          console.log(e + "获取数据失败");
+        });
+    },
+
+    onSubmit() {
+      this.$api({
+        // 更新
+        url: "/api/SnNavigation/UpdateAsync",
+        method: "put",
+        contentType: "application/json;charset=UTF-8",
+        data: {
+          navId: this.navigtion.navId,
+          navTitle: this.form.navTitle,
+          navText: this.form.navText,
+          navImg: this.form.navImg,
+          navType: this.form.navType,
+          navUrl: this.form.navUrl
+        },
+        dataType: "json"
+      })
+        .then(res => {
+          if (res.status === 200) {
+            this.$notify({
+              title: "更新成功",
+              message: res.statuss,
+              type: "success"
+            });
+            this.$router.push("./SnNavigation");
+          } else {
+            this.$notify.error({
+              title: "更新错误",
+              message: "更新错误"
+            });
+          }
+        })
+        .catch(console.error.bind(console)); // 异常
+    },
+    goBack() {
+      this.$router.go(-1);
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.Navform {
+  width: 75%;
+  margin-left: 19%;
+  background-color: white;
+  .Navform-1 {
+    // background-color: #468847;
+    padding: 10px 0 20px 15px;
+  }
+
+  .Navform-2 {
+    // background-color: #3a33d1;
+    padding: 20px 10px 20px 10px;
+  }
+}
+</style>

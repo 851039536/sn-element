@@ -85,10 +85,10 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/SnUpForm/UserUpform.vue")
   },
   {
-    path: "/SnLabelsUpform",
-    name: "SnLabelsUpform",
+    path: "/SnLabelsUp",
+    name: "SnLabelsUp",
 
-    component: () => import("../views/SnUpForm/SnLabelsUpform.vue")
+    component: () => import("../views/SnLabels/SnLabelsUp.vue")
   },
   {
     path: "/SnPictureUpform",

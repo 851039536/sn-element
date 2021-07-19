@@ -88,16 +88,10 @@ export default {
               this.userToken = "Bearer " + this.result1[1];
               // 将用户token保存到vuex中
               this.changeLogin({ Authorization: this.userToken });
-
-              // this.$store.state.token = this.result1[1];
-              // alert(this.$store.state.token);
               this.$router.replace("/SnNavigation");
             }
           })
-        )
-        .catch(err => {
-          console.log(err);
-        });
+        );
     }
   }
 };

@@ -11,7 +11,7 @@ import qs from "qs";
 import store from "../store/index";
 import router from "../router";
 //'http://129.204.92.64:8081/' 腾讯服务器
-(axios.defaults.baseURL = "https://localhost:44367/"),
+(axios.defaults.baseURL = process.env.VUE_APP_API_URL),
   (axios.defaults.timeout = 12000);
 // axios.defaults.headers.common['token'] =  AUTH_TOKEN
 axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
@@ -34,10 +34,10 @@ axios.interceptors.request.use(
     //   config.headers.Authorization = store.state.token;
     //   console.log("token:" + store.state.token);
     // }
-
+    // 若是有做鉴权token , 就给头部带上token
     if (localStorage.getItem("Authorization")) {
       config.headers.Authorization = localStorage.getItem("Authorization");
-      console.log("+++" + config.headers.Authorization);
+      console.log("token" + config.headers.Authorization);
     }
     return config;
   },

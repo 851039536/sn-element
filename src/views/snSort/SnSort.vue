@@ -33,11 +33,12 @@
             :highlight-current-row="true"
             style="width: 100% "
           >
-            <el-table-column label="主键" prop="labelId"> </el-table-column>
-            <el-table-column label="标签名" prop="labelName"> </el-table-column>
-            <el-table-column label="标签别名" prop="labelAlias">
+            <el-table-column label="主键" prop="sortId"> </el-table-column>
+            <el-table-column label="名称" prop="sortName"> </el-table-column>
+            <el-table-column label="别名" prop="sortAlias"> </el-table-column>
+            <el-table-column label="描述" prop="sortDescription">
             </el-table-column>
-            <el-table-column label="标签描述" prop="labelDescription">
+            <el-table-column label="父分类" prop="parentSortId">
             </el-table-column>
             <el-table-column align="right">
               <template slot="header">
@@ -76,7 +77,7 @@
 
 <script>
 export default {
-  name: "SnLabelsS",
+  name: "SnSort",
   inject: ["reload"],
   data() {
     return {
@@ -106,10 +107,10 @@ export default {
       this.$api
         .all([
           //总数
-          this.$api.get("/api/SnLabels/GetCountAsync"),
+          this.$api.get("/api/SnSort/GetCountAsync"),
           //分页
           this.$api.get(
-            "/api/SnLabels/GetfyAllAsync?pageIndex=" +
+            "/api/SnSort/GetFyAllAsync?pageIndex=" +
               this.page +
               "&pageSize=" +
               this.pagesize +
@@ -135,9 +136,9 @@ export default {
     handleEdit(index, row) {
       // .带参数跳转
       this.$router.push({
-        path: "./SnLabelsUpform",
+        path: "./SnSortUpform",
         query: {
-          id: row.labelId
+          id: row.sortId
         }
       });
       // this.$router.push("./Navigationform");
@@ -150,7 +151,7 @@ export default {
       })
         .then(() => {
           this.$api({
-            url: "/api/SnLabels/AsyDetLabels?id=" + row.labelId,
+            url: "/api/SnSort/AsyDetSort?id=" + row.sortId,
             method: "delete"
           })
             .then(res => {
@@ -181,7 +182,7 @@ export default {
     GetPaging() {
       this.$api({
         url:
-          "/api/SnLabels/GetfyAllAsync?pageIndex=" +
+          "/api/SnSort/GetFyAllAsync?pageIndex=" +
           this.page +
           "&pageSize=" +
           this.pagesize +
@@ -200,36 +201,7 @@ export default {
       this.GetPaging();
     },
     add() {
-      this.$router.push("./SnLabelsAddform");
-    },
-    alltype(typeid) {
-      this.vtype = typeid;
-
-      this.$api
-        .all([
-          //总数
-          this.$api.get("/api/SnVideo/GetVideoCountType?type=" + this.vtype),
-          //分页
-          this.$api.get(
-            "/api/SnVideo/GetfyVideo?type=" +
-              this.vtype +
-              "&pageIndex=" +
-              this.page +
-              "&pageSize=" +
-              this.pagesize +
-              "&isDesc=" +
-              this.value
-          )
-        ])
-        .then(
-          this.$api.spread((res1, res2) => {
-            this.total = res1.data;
-            this.tableData = res2.data;
-          })
-        )
-        .catch(err => {
-          console.log(err);
-        });
+      this.$router.push("./SnSortAdd");
     }
   }
 };
@@ -240,12 +212,14 @@ export default {
   background-color: white;
 
   position: relative;
+
   .SnArticle-1 {
     position: absolute;
     top: 30px;
     right: 110px;
     z-index: 1;
   }
+
   .SnNavigation-1 {
     // background-color: #42b983;
     padding-right: 40px;
@@ -261,8 +235,10 @@ export default {
       padding: 5px;
     }
   }
+
   .SnArticle-3-1 {
     display: inline-block;
+
     .el-link {
       font-size: 0.8125rem;
     }
