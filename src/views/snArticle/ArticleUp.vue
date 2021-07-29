@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-header>
+    <!--   <el-header>
       <SnHeader></SnHeader>
     </el-header>
-    <Sidebar></Sidebar>
+    <Sidebar></Sidebar>-->
     <div class="Navform">
       <div class="Navform-1">
-        <el-page-header @back="goBack" content="文章内容"> </el-page-header>
+        <el-page-header @back="goBack" content="文章内容"></el-page-header>
       </div>
       <div class="Navform-2">
         <el-form ref="form" :model="form" label-width="80px" size="small">
@@ -34,8 +34,7 @@
                   type="date"
                   placeholder="选择日期"
                   :picker-options="pickerOptions"
-                >
-                </el-date-picker>
+                ></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="4">
@@ -62,8 +61,7 @@
                     :key="item.sortId"
                     :label="item.sortName"
                     :value="item.sortId"
-                  >
-                  </el-option>
+                  ></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -80,8 +78,7 @@
                     :key="item.labelId"
                     :label="item.labelName"
                     :value="item.labelId"
-                  >
-                  </el-option>
+                  ></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -92,25 +89,19 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="图片路径">
-                <el-select
-                  v-model="form.url_img"
-                  filterable
-                  placeholder="请选择"
-                >
+                <el-select v-model="form.url_img" filterable placeholder="请选择">
                   <el-option
                     v-for="item in imgtest"
                     :key="item.pictureId"
                     :label="item.pictureTitle"
                     :value="item.pictureUrl"
-                  >
-                  </el-option>
+                  ></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
 
             <el-col :span="24">
               <el-form-item label="内容">
-                <!-- <el-input v-model="form.text"></el-input> -->
                 <div class="editor-text">
                   <div class="editor-text-1">
                     <mavon-editor
@@ -134,143 +125,129 @@
         </el-form>
       </div>
     </div>
-  </div></template
+  </div>
+</template
 >
 <script>
-export default {
-  data() {
-    return {
-      form: {
-        article_id: 0,
-        user_id: 0,
-        title: "",
-        title_text: "",
-        text: "",
-        time: "",
-        label_id: 0,
-        read: 0,
-        give: 0,
-        comment: "",
-        sort_id: 0,
-        type_title: "string",
-        url_img: "img"
-      },
-      id: this.$route.query.id,
-      newarticle: [],
-      labelvalue: "",
-      labeltest: [],
-      sortvalue: "",
-      sorttest: [],
-      imgtest: [],
-
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
+  import article from "../../api/article.js";
+  import labels from "../../api/labels.js";
+  import sort from "../../api/sort.js";
+  export default {
+    data() {
+      return {
+        form: {
+          article_id: 0,
+          user_id: 0,
+          title: "",
+          title_text: "",
+          text: "",
+          time: "",
+          label_id: 0,
+          read: 0,
+          give: 0,
+          comment: "",
+          sort_id: 0,
+          type_title: "string",
+          url_img: "img"
         },
-        shortcuts: [
-          {
-            text: "今天",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            }
+        id: this.$route.query.id,
+        newarticle: [],
+        labelvalue: "",
+        labeltest: [],
+        sortvalue: "",
+        sorttest: [],
+        imgtest: [],
+
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
           },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
+          shortcuts: [
+            {
+              text: "今天",
+              onClick(picker) {
+                picker.$emit("pick", new Date());
+              }
+            },
+            {
+              text: "昨天",
+              onClick(picker) {
+                const date = new Date();
+                date.setTime(date.getTime() - 3600 * 1000 * 24);
+                picker.$emit("pick", date);
+              }
+            },
+            {
+              text: "一周前",
+              onClick(picker) {
+                const date = new Date();
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                picker.$emit("pick", date);
+              }
             }
-          },
-          {
-            text: "一周前",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
-      }
-    };
-  },
-  created() {
-    this.getall(this.id);
-  },
-  methods: {
-    // 窗体赋值
-    getall(id) {
-      this.$api({
-        url: "/api/SnArticle/AsyGetTestID?id=" + id
-      })
-        .then(res => {
+          ]
+        }
+      };
+    },
+    created() {
+      this.getall(this.id);
+    },
+    methods: {
+      // 窗体赋值
+      getall(id) {
+        article.GetByIdAsync(id).then(res => {
           this.newarticle = res.data;
           this.form.article_id = id;
-          this.form.user_id = this.newarticle.user_id;
+          this.form.user_id = this.newarticle.userId;
           this.form.title = this.newarticle.title;
-          this.form.title_text = this.newarticle.title_text;
+          this.form.title_text = this.newarticle.titleText;
           this.form.text = this.newarticle.text;
           this.form.time = this.newarticle.time;
           this.form.read = this.newarticle.read;
-          this.labelvalue = this.newarticle.label_id;
+          this.labelvalue = this.newarticle.labelId;
           this.form.give = this.newarticle.give;
           this.form.comment = this.newarticle.comment;
-          this.sortvalue = this.newarticle.sort_id;
-          this.form.type_title = this.newarticle.type_title;
-          this.form.url_img = this.newarticle.url_img;
-        })
-       
-
-      // 加载分类
-      this.$api({
-        url: "/api/SnLabels/GetAllAsync"
-      })
-        .then(res => {
+          this.sortvalue = this.newarticle.sortId;
+          this.form.type_title = this.newarticle.typeTitle;
+          this.form.url_img = this.newarticle.urlImg;
+        });
+        labels.GetAllAsync().then(res => {
           this.labeltest = res.data;
-        })
-       
-      // 加载标签
-      this.$api({
-        url: "/api/SnSort/GetAllAsync"
-      })
-        .then(res => {
+        });
+        sort.GetAllAsync().then(res => {
           this.sorttest = res.data;
-        })
-       
+        });
 
-      // 加载图床
-      this.$api({
-        url:
-          "/api/SnPicture/GetFyTypeAllAsync?type=1&pageIndex=1&pageSize=100&isDesc=true"
-      })
-        .then(res => {
+        // 加载图床
+        this.$api({
+          url:
+            "/api/SnPicture/GetFyTypeAllAsync?type=1&pageIndex=1&pageSize=100&isDesc=true"
+        }).then(res => {
           this.imgtest = res.data;
-        })
-       
-    },
+        });
+      },
 
-    onSubmit() {
-      this.$api({
-        // 更新
-        url: "/api/SnArticle/UpdateAsync",
-        method: "put",
-        data: {
-          article_id: this.newarticle.article_id,
-          user_id: Number(this.form.user_id),
-          title: this.form.title,
-          title_text: this.form.title_text,
-          text: this.form.text,
-          time: this.form.time,
-          label_id: this.labelvalue,
-          read: Number(this.form.read),
-          give: Number(this.form.give),
-          comment: this.form.comment,
-          sort_id: this.sortvalue,
-          type_title: this.form.type_title,
-          url_img: this.form.url_img
-        }
-      })
-        .then(res => {
+      onSubmit() {
+        this.$api({
+          // 更新
+          url: "/api/SnArticle/UpdateAsync",
+          method: "put",
+          data: {
+            articleId: this.newarticle.articleId,
+            userId: Number(this.form.user_id),
+            title: this.form.title,
+            titleText: this.form.title_text,
+            text: this.form.text,
+            time: this.form.time,
+            labelId: this.labelvalue,
+            read: Number(this.form.read),
+            give: Number(this.form.give),
+            comment: Number(this.form.comment),
+            sortId: this.sortvalue,
+            typeTitle: this.form.type_title,
+            urlImg: this.form.url_img
+          }
+        }).then(res => {
           if (res.status === 200) {
             this.$notify({
               title: "更新成功",
@@ -284,44 +261,44 @@ export default {
               message: "更新错误"
             });
           }
-        })
-       
-    },
+        });
+      },
 
-    // 后退
-    goBack() {
-      this.$router.go(-1);
+      // 后退
+      goBack() {
+        this.$router.go(-1);
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.Navform {
-  width: 75%;
-  margin-left: 19%;
-  background-color: white;
+  .Navform {
+    width: 78%;
+    margin-left: 20%;
+    @apply mt-2;
+    background-color: white;
 
-  .Navform-1 {
-    // background-color: #468847;
-    padding: 10px 0 20px 15px;
-  }
-
-  .Navform-2 {
-    // background-color: #3a33d1;
-    padding: 20px 10px 20px 10px;
-
-    .editor-text {
-      background-color: #42b983;
-      width: 100%;
-      height: 450px;
+    .Navform-1 {
+      // background-color: #468847;
+      padding: 10px 0 20px 15px;
     }
-    .editor-text-1 {
-      background-color: #42b983;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
+
+    .Navform-2 {
+      // background-color: #3a33d1;
+      padding: 20px 10px 20px 10px;
+
+      .editor-text {
+        background-color: #42b983;
+        width: 100%;
+        height: 450px;
+      }
+      .editor-text-1 {
+        background-color: #42b983;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
     }
   }
-}
 </style>

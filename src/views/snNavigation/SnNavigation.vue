@@ -1,193 +1,138 @@
 <template>
-  <div>
-    <el-header>
-      <SnHeader></SnHeader>
-    </el-header>
-    <Sidebar></Sidebar>
-    <div class="SnNavigation">
-      <div class="SnNavigation-3">
-        <el-link :underline="false" @click="alltype('收藏')">收藏</el-link>
-        <el-link :underline="false" @click="alltype('网站')">网站</el-link>
-        <el-link :underline="false" @click="alltype('博客圈')">博客圈</el-link>
-        <el-link :underline="false" @click="alltype('VUE')">VUE</el-link>
-        <el-link :underline="false" @click="alltype('CSS')">CSS</el-link>
-        <el-link :underline="false" @click="alltype('NET')">NET</el-link>
-        <el-link :underline="false" @click="alltype('javascript')"
-          >javascript</el-link
-        >
-        <el-link :underline="false" @click="alltype('个人工具')"
-          >个人工具</el-link
-        >
-        <el-link :underline="false" @click="alltype('论坛')">论坛</el-link>
-        <el-link :underline="false" @click="alltype('导航')">导航</el-link>
-        <el-link :underline="false" @click="alltype('CSS框架')"
-          >CSS框架</el-link
-        >
-        <el-link :underline="false" @click="alltype('文档')">文档</el-link>
-        <el-link :underline="false" @click="alltype('工具')">工具</el-link>
-				 <el-link :underline="false" @click="alltype('学习')">学习</el-link>
-      </div>
-      <!-- 升序降序 -->
-      <div class="SnNavigation-1">
-        排序
-        <el-switch
-          v-model="value"
-          @click.native="sx(value)"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          active-value="true"
-          inactive-value="false"
-        >
-          >
-        </el-switch>
-      </div>
-      <!-- tab列表 -->
-      <div class="SnNavigation-2">
-        <el-main>
-          <el-table
-            v-loading.fullscreen.lock="fullscreenLoading"
-            :data="
+  <div id="snNavigation">
+    <div class="snNavigation_type">
+      <el-link
+        :underline="false"
+        v-for="result in navTypeData"
+        :key="result.id"
+        @click="alltype(result.title)"
+      >{{result.title}}</el-link>
+    </div>
+    <!-- 升序降序 -->
+    <div class="SnNavigation-1">
+      排序
+      <el-switch
+        v-model="value"
+        @click.native="rank(value)"
+        active-color="#13ce66"
+        inactive-color="#ff4949"
+        active-value="true"
+        inactive-value="false"
+      >></el-switch>
+    </div>
+    <!-- tab列表 -->
+    <div class="snNavigation_tab">
+      <el-main>
+        <el-table
+          :data="
               tableData.filter(
                 data =>
                   !search ||
                   data.name.toLowerCase().includes(search.toLowerCase())
               )
             "
-            :border="true"
-            size="small"
-            :highlight-current-row="true"
-            ss
-            style="width: 100% "
-          >
-            <el-table-column label="navId" prop="navId"> </el-table-column>
-            <el-table-column label="navTitle" prop="navTitle">
-            </el-table-column>
-            <el-table-column label="navType" prop="navType"> </el-table-column>
-            <el-table-column label="navUrl" prop="navUrl"> </el-table-column>
-            <el-table-column align="right">
-              <template slot="header">
-                <el-link type="primary" @click.native="add(1)"
-                  >添加信息</el-link
-                >
-              </template>
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >Edit</el-button
-                >
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                  >Delete</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-main>
-      </div>
-      <!-- 分页 -->
-      <el-pagination
-        @current-change="current_change"
-        :page="page"
-        :page-size="pagesize"
-        layout="prev, pager, next"
-        :total="total"
-      ></el-pagination>
+          :border="true"
+          size="small"
+          :highlight-current-row="true"
+          ss
+          style="width: 100% "
+        >
+          <el-table-column label="navId" prop="navId"></el-table-column>
+          <el-table-column label="navTitle" prop="navTitle"></el-table-column>
+          <el-table-column label="navType" prop="navType"></el-table-column>
+          <el-table-column label="navUrl" prop="navUrl"></el-table-column>
+          <el-table-column align="right">
+            <template slot="header">
+              <el-link type="primary" @click.native="add(1)">添加信息</el-link>
+            </template>
+            <template slot-scope="scope">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-main>
     </div>
+    <!-- 分页 -->
+    <el-pagination
+      @current-change="current_change"
+      :page="page"
+      :page-size="pagesize"
+      layout="prev, pager, next"
+      :total="total"
+    ></el-pagination>
   </div>
 </template>
 
 <script>
-// import Sidebar from "../sidebar/Sidebar.vue";
-// import SnHeader from "../SnHeader/SnHeader.vue";
-export default {
-  name: "SnNavigation",
-  components: {
-    // Sidebar
-    // SnHeader
-  },
-  inject: ["reload"],
-  data() {
-    return {
-      tableData: [],
-      search: "",
-      total: 20, //默认数据总数
-      page: 1, //当前页码
-      pagesize: 8, //每页的数据条数
-      navtype: "all", //默认所有
-      fullscreenLoading: false,
-      value: "true"
-    };
-  },
+  import navigation from "../../api/navigation.js";
+  export default {
+    name: "SnNavigation",
+    components: {
+    },
+    inject: ["reload"],
+    data() {
+      return {
+        tableData: [],
+        navTypeData: [],
+        search: "",
+        total: 20, //默认数据总数
+        page: 1, //当前页码
+        pagesize: 7, //每页的数据条数
+        navtype: "all", //默认所有
+        fullscreenLoading: false,
+        value: "true",
 
-  created() {
-    this.fullscreenLoading = true;
-    setTimeout(() => {
-      this.fullscreenLoading = false;
-    }, 300);
-    this.getall();
-  },
-  methods: {
-    // 初始化加载
-    getall() {
-      this.$api
-        .all([
-          //总数
-          this.$api.get("/api/SnNavigation/GetCountAsync"),
-          //分页
-          this.$api.get(
-            "/api/SnNavigation/GetFyAllAsync?type=" +
-              this.navtype +
-              "&pageIndex=" +
-              this.page +
-              "&pageSize=" +
-              this.pagesize +
-              "&isDesc=" +
-              this.value
-          )
-        ])
-        .then(
-          this.$api.spread((res1, res2) => {
-            this.total = res1.data;
-            this.tableData = res2.data;
-          })
-        )
-        .catch(err => {
-          console.log(err);
+      };
+    },
+
+    created() {
+      this.getall();
+    },
+
+    activated() {
+      this.getall();
+    },
+
+    methods: {
+      // 初始化加载
+      getall() {
+
+        //加载分类
+        navigation.GetNavTypeAllAsync().then(res => {
+          this.navTypeData = res.data;
+        })
+        //加载总数
+        navigation.GetCountAsync().then(res => {
+          this.total = res.data;
+        })
+        //分页查询
+        navigation.GetFyAllAsync(this.navtype, this.page, this.pagesize, this.value).then(res => {
+          this.tableData = res.data;
+        })
+      },
+      //跳转
+      rank(value) {
+        this.GetSnNavigation(1, value);
+      },
+      handleEdit(index, row) {
+        this.$router.push({
+          path: "./SnNavigationUp",
+          query: {
+            id: row.navId
+          }
         });
-    },
+      },
+      handleDelete(index, row) {
+        this.$confirm("此操作将永久删除" + row.navTitle + ", 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
 
-    sx(value) {
-      this.GetSnNavigation(1, value);
-    },
-    handleEdit(index, row) {
-      console.log(index, row.navId, 111111);
-
-      // .带参数跳转
-      this.$router.push({
-        path: "./SnNavigationUp",
-        query: {
-          id: row.navId
-        }
-      });
-      // this.$router.push("./Navigationform");
-    },
-    handleDelete(index, row) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$api({
-            url: "/api/SnNavigation/AsyDelNavigation?id=" + row.navId,
-            method: "delete"
-          })
-            .then(res => {
-              console.log(res.data);
-              if (res.data === "删除成功") {
+            navigation.DeleteAsync(row.navId).then(res => {
+              if (res.data === true) {
                 this.$message({
                   type: "success",
                   message: "删除成功!"
@@ -200,98 +145,66 @@ export default {
                 });
               }
             })
-            .catch(console.error.bind(console)); // 异常
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
+
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
+            });
+
           });
-        });
-    },
-    //分页查询
-    GetSnNavigation() {
-      this.$api({
-        url:
-          "/api/SnNavigation/GetFyAllAsync?type=" +
-          this.navtype +
-          "&pageIndex=" +
-          this.page +
-          "&pageSize=" +
-          this.pagesize +
-          "&isDesc=" +
-          this.value
-      })
-        .then(res => {
+
+      },
+      //分页查询
+      GetSnNavigation() {
+        navigation.GetFyAllAsync(this.navtype, this.page, this.pagesize, this.value).then(res => {
           this.tableData = res.data;
         })
-        .catch(e => {
-          console.log(e + "获取数据失败");
-        });
-    },
-    current_change(val) {
-      this.page = val;
-      this.GetSnNavigation();
-    },
-    add() {
-      this.$router.push("./SnNavigationAdd");
-    },
-    alltype(name) {
-      this.navtype = name;
-      this.$api
-        .all([
-          //总数
-          this.$api.get(
-            "/api/SnNavigation/CountTypeAsync?type=" + this.navtype
-          ),
-          //分页
-          this.$api.get(
-            "/api/SnNavigation/GetFyAllAsync?type=" +
-              this.navtype +
-              "&pageIndex=" +
-              this.page +
-              "&pageSize=" +
-              this.pagesize +
-              "&isDesc=" +
-              this.value
-          )
-        ])
-        .then(
-          this.$api.spread((res1, res2) => {
-            this.total = res1.data;
-            this.tableData = res2.data;
-          })
-        )
-        .catch(err => {
-          console.log(err);
-        });
+      },
+      current_change(val) {
+        this.page = val;
+        this.GetSnNavigation();
+      },
+      add() {
+        this.$router.push("./SnNavigationAdd");
+      },
+      alltype(name) {
+        this.navtype = name;
+        // alert(1);
+        navigation.CountTypeAsync(this.navtype).then(res => {
+          this.total = res.data;
+        })
+        navigation.GetFyAllAsync(this.navtype, this.page, this.pagesize, this.value).then(res => {
+          this.tableData = res.data;
+        })
+        this.current_change(1);
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.SnNavigation {
-  background-color: white;
-  width: 75%;
+  #snNavigation {
+    width: 78%;
+    margin-left: 20%;
+    @apply mt-2;
+    position: relative;
+    .SnNavigation-1 {
+      position: absolute;
+      top: 68px;
+      right: 110px;
+      z-index: 1;
+    }
 
-  margin-left: 20%;
-  position: relative;
-  .SnNavigation-1 {
-    position: absolute;
-    top: 68px;
-    right: 110px;
-    z-index: 1;
-  }
-
-  .SnNavigation-2 {
-    margin: 10px 0 10px 0;
-  }
-  .SnNavigation-3 {
-    .el-link {
-      margin-left: 10px;
-      padding: 5px;
+    .snNavigation_tab {
+      // @apply bg-gray-400;
+    }
+    .snNavigation_type {
+      @apply py-1;
+      .el-link {
+        @apply ml-4 p-1 bg-white rounded;
+      }
     }
   }
-}
 </style>

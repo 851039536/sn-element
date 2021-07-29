@@ -12,24 +12,24 @@
         <el-form ref="form" :model="form" label-width="80px" size="small">
           <el-row>
             <el-col :span="24">
-              <el-form-item label="名称">
-                <el-input v-model="form.sortName"></el-input>
+              <el-form-item label="标签名称">
+                <el-input v-model="form.labelName"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="别名">
-                <el-input v-model="form.sortAlias"></el-input>
+              <el-form-item label="标签别名">
+                <el-input v-model="form.labelAlias"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="描述">
-                <el-input v-model="form.sortDescription"></el-input>
+              <el-form-item label="标签描述">
+                <el-input v-model="form.labelDescription"></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="24">
               <el-form-item>
-                <el-button type="primary" @click="onSubmit()">更新</el-button>
+                <el-button type="primary" @click="onSubmit()">Add</el-button>
                 <el-button>取消</el-button>
               </el-form-item>
             </el-col>
@@ -38,60 +38,39 @@
       </div>
     </div>
   </div>
-</template
->
+</template>
 <script>
   export default {
     data() {
       return {
         form: {
-          sortId: 0,
-          sortName: "",
-          sortAlias: "",
-          sortDescription: "",
-          parentSortId: 0
-        },
-        id: this.$route.query.id,
-        newtext: []
+          labelId: 0,
+          labelName: "",
+          labelAlias: "",
+          labelDescription: ""
+        }
       };
     },
-    created() {
-      this.getall(this.id);
-    },
     methods: {
-      getall(id) {
-        this.$api({
-          url: "/api/SnSort/AsyGetSortId?sortId=" + id
-        })
-          .then(res => {
-            this.newtext = res.data[0];
-            this.form.sortId = id;
-            this.form.sortName = this.newtext.sortName;
-            this.form.sortAlias = this.newtext.sortAlias;
-            this.form.sortDescription = this.newtext.sortDescription;
-          })
-          .catch(e => {
-            console.log(e + "获取数据失败");
-          });
-      },
+      // 添加数据
       onSubmit() {
         this.$api({
-          url: "/api/SnSort/AysUpSort",
-          method: "put",
+          url: "/api/SnLabels/AddAsync",
+          method: "post",
           data: {
-            sortId: this.newtext.sortId,
-            sortName: this.form.sortName,
-            sortAlias: this.form.sortAlias,
-            sortDescription: this.form.sortDescription,
-            parentSortId: this.form.parentSortId
+            labelId: 0,
+            labelName: this.form.labelName,
+            labelAlias: this.form.labelAlias,
+            labelDescription: this.form.labelDescription
           }
         })
           .then(res => {
-            if (res.status === 200) {
+            if (res.data === true) {
               this.$message({
                 type: "success",
-                message: "更新成功!"
+                message: "添加成功!"
               });
+              // this.$router.push("./SnArticle");
             } else {
               alert("添加失败");
             }
@@ -126,7 +105,6 @@
         width: 100%;
         height: 450px;
       }
-
       .editor-text-1 {
         background-color: #42b983;
         width: 100%;

@@ -15,8 +15,8 @@ VueRouter.prototype.replace = function replace(to) {
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
+// eslint-disable-next-line no-sparse-arrays
+const routes = [{
     path: "/",
     name: "SnLogin",
     component: SnLogin
@@ -26,9 +26,18 @@ const routes = [
     name: "SnNavigation",
     meta: {
       title: "SnNavigation",
-      keepAlive: false // 缓存
+      keepAlive: true, // 此组件需要被缓存
     },
     component: () => import("../views/snNavigation/SnNavigation.vue")
+  },
+  {
+    path: "/Transfer",
+    name: "Transfer",
+    meta: {
+      title: "Transfer",
+      keepAlive: false // 缓存
+    },
+    component: () => import("../views/common/Transfer.vue")
   },
   {
     path: "/SnPicture",
@@ -47,6 +56,15 @@ const routes = [
       keepAlive: false // 缓存
     },
     component: () => import("../views/snOne/SnOne.vue")
+  },
+  {
+    path: "/Home",
+    name: "Home",
+    meta: {
+      title: "Home",
+      keepAlive: false // 缓存
+    },
+    component: () => import("../views/Home.vue")
   },
   {
     path: "/SnNavigationUp",
@@ -82,7 +100,7 @@ const routes = [
     name: "UserUpform",
 
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/SnUpForm/UserUpform.vue")
+      import( /* webpackChunkName: "about" */ "../views/SnUpForm/UserUpform.vue")
   },
   {
     path: "/SnLabelsUp",
@@ -117,7 +135,7 @@ const routes = [
     name: "SnVideo",
     meta: {
       title: "SnVideo",
-      keepAlive: false // 缓存
+      keepAlive: false
     },
     component: () => import("../views/SnNavTest/SnVideo.vue")
   },
@@ -126,7 +144,7 @@ const routes = [
     name: "SnArticle",
     meta: {
       title: "SnArticle",
-      keepAlive: false // 缓存
+      keepAlive: true
     },
     component: () => import("../views/snArticle/SnArticle.vue")
   },
@@ -197,17 +215,16 @@ const routes = [
     path: "/SnSortAdd",
     name: "SnSortAdd",
     component: () => import("../views/snSort/SnSortAdd.vue")
-  },
-  ,
+  }, ,
   {
     path: "/SnLogin",
     name: "SnLogin",
     component: () => import("../views/SnLogin.vue")
   },
   {
-    path: "/SnLabelsAddform",
-    name: "SnLabelsAddform",
-    component: () => import("../views/SnForm/SnLabelsAddform.vue")
+    path: "/SnLabelsAdd",
+    name: "SnLabelsAdd",
+    component: () => import("../views/SnLabels/SnLabelsAdd.vue")
   },
   {
     path: "/SnOneAdd",

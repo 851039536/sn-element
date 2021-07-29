@@ -1,21 +1,19 @@
 <template>
   <div>
-    <el-header>
+    <!--  <el-header>
       <SnHeader></SnHeader>
     </el-header>
-    <Sidebar></Sidebar>
+    <Sidebar></Sidebar>-->
     <div class="SnArticle">
       <el-tabs type="border-card">
         <el-tab-pane label="文章管理">
           <div class="SnArticle-3">
-            <div
-              class="SnArticle-3-1"
-              v-for="info in LabelsData"
-              :key="info.id"
-            >
-              <el-link :underline="false" @click="alltype(info.soTypeId)">{{
+            <div class="SnArticle-3-1" v-for="info in LabelsData" :key="info.id">
+              <el-link :underline="false" @click="alltype(info.soTypeId)">
+                {{
                 info.soTypeTitle
-              }}</el-link>
+                }}
+              </el-link>
             </div>
           </div>
           <!-- 升序降序 -->
@@ -28,9 +26,7 @@
               inactive-color="#ff4949"
               active-value="true"
               inactive-value="false"
-            >
-              >
-            </el-switch>
+            >></el-switch>
           </div>
 
           <!-- tab列表 -->
@@ -50,33 +46,22 @@
                 :highlight-current-row="true"
                 style="width: 100% "
               >
-                <el-table-column label="oneId" prop="oneId"> </el-table-column>
-                <el-table-column label="oneTitle" prop="oneTitle">
-                </el-table-column>
-                <el-table-column label="oneImg" prop="oneImg">
-                </el-table-column>
-                <el-table-column label="oneTypeId" prop="oneTypeId">
-                </el-table-column>
-                <el-table-column label="oneData" prop="oneData">
-                </el-table-column>
+                <el-table-column label="oneId" prop="oneId"></el-table-column>
+                <el-table-column label="oneTitle" prop="oneTitle"></el-table-column>
+                <el-table-column label="oneImg" prop="oneImg"></el-table-column>
+                <el-table-column label="oneTypeId" prop="oneTypeId"></el-table-column>
+                <el-table-column label="oneData" prop="oneData"></el-table-column>
                 <el-table-column align="right">
                   <template slot="header">
-                    <el-link type="primary" @click.native="add(1)"
-                      >添加信息</el-link
-                    >
+                    <el-link type="primary" @click.native="add(1)">添加信息</el-link>
                   </template>
                   <template slot-scope="scope">
-                    <el-button
-                      size="mini"
-                      @click="handleEdit(scope.$index, scope.row)"
-                      >Edit</el-button
-                    >
+                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
                     <el-button
                       size="mini"
                       type="danger"
                       @click="handleDelete(scope.$index, scope.row)"
-                      >Delete</el-button
-                    >
+                    >Delete</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -98,143 +83,143 @@
 </template>
 
 <script>
-export default {
-  name: "SnOne",
-  inject: ["reload"],
-  data() {
-    return {
-      tableData: [],
-      search: "",
-      total: 0, //默认数据总数
-      page: 1, //当前页码
-      pagesize: 8, //每页的数据条数
-      fullscreenLoading: false,
-      lbtype: "00",
-      value: "true",
-      LabelsData: []
-    };
-  },
-
-  created() {
-    this.fullscreenLoading = true;
-    setTimeout(() => {
-      this.fullscreenLoading = false;
-    }, 200);
-    this.getall();
-  },
-  methods: {
-    sx(value) {
-      this.SnArticle(1, value);
+  export default {
+    name: "SnOne",
+    inject: ["reload"],
+    data() {
+      return {
+        tableData: [],
+        search: "",
+        total: 0, //默认数据总数
+        page: 1, //当前页码
+        pagesize: 8, //每页的数据条数
+        fullscreenLoading: false,
+        lbtype: "00",
+        value: "true",
+        LabelsData: []
+      };
     },
-    // 初始化加载
-    getall() {
-      this.$api
-        .all([
-          //总数
-          this.$api.get("/api/SnOne/CountAsync"),
-          // /api/SnOne/GetFyAllAsync?pageIndex=1&pageSize=1&isDesc=trues
-          //分页
-          this.$api.get(
-            "/api/SnOne/GetFyAllAsync?pageIndex=" +
+
+    created() {
+      this.fullscreenLoading = true;
+      setTimeout(() => {
+        this.fullscreenLoading = false;
+      }, 200);
+      this.getall();
+    },
+    methods: {
+      sx(value) {
+        this.SnArticle(1, value);
+      },
+      // 初始化加载
+      getall() {
+        this.$api
+          .all([
+            //总数
+            this.$api.get("/api/SnOne/CountAsync"),
+            // /api/SnOne/GetFyAllAsync?pageIndex=1&pageSize=1&isDesc=trues
+            //分页
+            this.$api.get(
+              "/api/SnOne/GetFyAllAsync?pageIndex=" +
               this.page +
               "&pageSize=" +
               this.pagesize +
               "&isDesc=" +
               this.value
-          ),
-          // 加载分类
-          this.$api.get("/api/SnOneType/GetAllAsync")
-        ])
-        .then(
-          this.$api.spread((res1, res2, res3) => {
-            this.total = res1.data;
-            this.tableData = res2.data;
-            this.LabelsData = res3.data;
-          })
-        )
-        .catch(err => {
-          console.log(err);
-        });
-    },
-
-    current_change(val) {
-      this.page = val;
-      this.SnArticle();
-    },
-    handleEdit(index, row) {
-      // .带参数跳转
-      this.$router.push({
-        path: "./OneUp",
-        query: {
-          id: row.oneId
-        }
-      });
-    },
-    handleDelete(index, row) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$api({
-            url: "/api/SnOne/DeleteAsync?id=" + row.oneId,
-            method: "delete"
-          }).then(res => {
-            console.log(res.data);
-            if (res.data === true) {
-              this.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-              this.reload();
-            } else {
-              this.$message({
-                type: "info",
-                message: "删除失败"
-              });
-            }
+            ),
+            // 加载分类
+            this.$api.get("/api/SnOneType/GetAllAsync")
+          ])
+          .then(
+            this.$api.spread((res1, res2, res3) => {
+              this.total = res1.data;
+              this.tableData = res2.data;
+              this.LabelsData = res3.data;
+            })
+          )
+          .catch(err => {
+            console.log(err);
           });
+      },
+
+      current_change(val) {
+        this.page = val;
+        this.SnArticle();
+      },
+      handleEdit(index, row) {
+        // .带参数跳转
+        this.$router.push({
+          path: "./OneUp",
+          query: {
+            id: row.oneId
+          }
+        });
+      },
+      handleDelete(index, row) {
+        this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
+          .then(() => {
+            this.$api({
+              url: "/api/SnOne/DeleteAsync?id=" + row.oneId,
+              method: "delete"
+            }).then(res => {
+              console.log(res.data);
+              if (res.data === true) {
+                this.$message({
+                  type: "success",
+                  message: "删除成功!"
+                });
+                this.reload();
+              } else {
+                this.$message({
+                  type: "info",
+                  message: "删除失败"
+                });
+              }
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
+            });
           });
-        });
 
-      this.reload();
-    },
+        this.reload();
+      },
 
-    SnArticle() {
-      this.$api({
-        url:
-          "/api/SnOne/GetFyTypeAsync?type=" +
-          this.lbtype +
-          "&pageIndex=" +
-          this.page +
-          "&pageSize=" +
-          this.pagesize +
-          "&name=1" +
-          "&isDesc=" +
-          this.value
-      }).then(res => {
-        this.tableData = res.data;
-      });
-    },
-    add() {
-      this.$router.push("./SnOneAdd");
-    },
-    alltype(typeid) {
-      console.log(typeid);
-      this.lbtype = typeid;
-      this.$api
-        .all([
-          //总数
-          this.$api.get("/api/SnOne/CountTypeAsync?type=" + this.lbtype),
-          //分页/api/SnOne/GetFyTypeAsync?type=1&pageIndex=1&pageSize=1&name=1&isDesc=true
-          this.$api.get(
+      SnArticle() {
+        this.$api({
+          url:
             "/api/SnOne/GetFyTypeAsync?type=" +
+            this.lbtype +
+            "&pageIndex=" +
+            this.page +
+            "&pageSize=" +
+            this.pagesize +
+            "&name=1" +
+            "&isDesc=" +
+            this.value
+        }).then(res => {
+          this.tableData = res.data;
+        });
+      },
+      add() {
+        this.$router.push("./SnOneAdd");
+      },
+      alltype(typeid) {
+        console.log(typeid);
+        this.lbtype = typeid;
+        this.$api
+          .all([
+            //总数
+            this.$api.get("/api/SnOne/CountTypeAsync?type=" + this.lbtype),
+            //分页/api/SnOne/GetFyTypeAsync?type=1&pageIndex=1&pageSize=1&name=1&isDesc=true
+            this.$api.get(
+              "/api/SnOne/GetFyTypeAsync?type=" +
               this.lbtype +
               "&pageIndex=" +
               this.page +
@@ -243,52 +228,53 @@ export default {
               "&name=1" +
               "&isDesc=" +
               this.value
-          )
-        ])
-        .then(
-          this.$api.spread((res1, res2) => {
-            this.total = res1.data;
-            this.tableData = res2.data;
-          })
-        );
+            )
+          ])
+          .then(
+            this.$api.spread((res1, res2) => {
+              this.total = res1.data;
+              this.tableData = res2.data;
+            })
+          );
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.SnArticle {
-  background-color: white;
-  width: 75%;
-  margin-left: 20%;
-  position: relative;
+  .SnArticle {
+    background-color: white;
+    width: 78%;
+    margin-left: 20%;
+    @apply mt-2;
+    position: relative;
 
-  .SnArticle-1 {
-    position: absolute;
-    top: 75px;
-    right: 110px;
-    z-index: 1;
-  }
+    .SnArticle-1 {
+      position: absolute;
+      top: 75px;
+      right: 110px;
+      z-index: 1;
+    }
 
-  .SnArticle-2 {
-    // background-color: #468847;
-    margin: 3px 0 5px 0;
-  }
+    .SnArticle-2 {
+      // background-color: #468847;
+      margin: 3px 0 5px 0;
+    }
 
-  .SnArticle-3 {
-    .el-link {
-      margin-left: 10px;
-      padding: 5px;
+    .SnArticle-3 {
+      .el-link {
+        margin-left: 10px;
+        padding: 5px;
+      }
+    }
+
+    .SnArticle-3-1 {
+      display: inline-block;
+
+      .el-link {
+        // background-color: #42b983;
+        font-size: 0.8125rem;
+      }
     }
   }
-
-  .SnArticle-3-1 {
-    display: inline-block;
-
-    .el-link {
-      // background-color: #42b983;
-      font-size: 0.8125rem;
-    }
-  }
-}
 </style>

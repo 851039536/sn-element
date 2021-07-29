@@ -1,7 +1,7 @@
 /*
  * @Author: Axios封装
  * @Date: 2020-12-08 10:39:03
- * @LastEditTime: 2021-05-12 10:49:48
+ * @LastEditTime: 2021-07-29 09:54:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blogs-s\src\api\index.ts
@@ -10,15 +10,18 @@ import axios from "axios";
 import qs from "qs";
 import store from "../store/index";
 import router from "../router";
+import {
+  Message
+} from 'element-ui';
 //'http://129.204.92.64:8081/' 腾讯服务器
 (axios.defaults.baseURL = process.env.VUE_APP_API_URL),
-  (axios.defaults.timeout = 12000);
+(axios.defaults.timeout = 12000);
 // axios.defaults.headers.common['token'] =  AUTH_TOKEN
 axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
 axios.defaults.headers.post["Access-Control-Allow-Origin-Type"] = "*"; // 允许跨域
 
 axios.interceptors.request.use(
-  function(config) {
+  function (config) {
     // 在发送请求之前做某件事
     if (
       config.method === "post" ||
@@ -29,11 +32,7 @@ axios.interceptors.request.use(
       config.data = qs.parse(config.data);
       console.log("qs:" + config.data);
     }
-    // 若是有做鉴权token , 就给头部带上token
-    // if (store.state.token) {
-    //   config.headers.Authorization = store.state.token;
-    //   console.log("token:" + store.state.token);
-    // }
+
     // 若是有做鉴权token , 就给头部带上token
     if (localStorage.getItem("Authorization")) {
       config.headers.Authorization = localStorage.getItem("Authorization");
@@ -42,18 +41,18 @@ axios.interceptors.request.use(
     return config;
   },
   error => {
-    // Message({
-    //   //  饿了么的消息弹窗组件,类似toast
-    //   showClose: true,
-    //   message: error,
-    //   type: "error.data.error.message"
-    // });
+    Message({
+      //  饿了么的消息弹窗组件,类似toast
+      showClose: true,
+      message: error,
+      type: "error.data.error.message"
+    });
     return Promise.reject(error.data.error.message);
   }
 );
 
 axios.interceptors.response.use(
-  function(config) {
+  function (config) {
     if (config.status === 200 || config.status === 204) {
       return Promise.resolve(config);
     } else {
@@ -62,7 +61,7 @@ axios.interceptors.response.use(
 
     // return config;
   },
-  function(error) {
+  function (error) {
     // return Promise.reject(error)
 
     if (error.response.status) {
@@ -78,10 +77,10 @@ axios.interceptors.response.use(
             }
           });
           break;
-        // 403 token过期
-        // 登录过期对用户进行提示
-        // 清除本地token和清空vuex中token对象
-        // 跳转登录页面
+          // 403 token过期
+          // 登录过期对用户进行提示
+          // 清除本地token和清空vuex中token对象
+          // 跳转登录页面
         case 403:
           // Toast({
           //   message: '登录过期，请重新登录',
@@ -100,7 +99,7 @@ axios.interceptors.response.use(
           });
           break;
 
-        // 404请求不存在
+          // 404请求不存在
         case 404:
           // Toast({
           //   message: '网络请求不存在',
@@ -108,13 +107,13 @@ axios.interceptors.response.use(
           //   forbidClick: true
           // });
           break;
-        // 其他错误，直接抛出错误提示
+          // 其他错误，直接抛出错误提示
         default:
-        // Toast({
-        //   message: error.response.data.message,
-        //   duration: 1500,
-        //   forbidClick: true
-        // });
+          // Toast({
+          //   message: error.response.data.message,
+          //   duration: 1500,
+          //   forbidClick: true
+          // });
       }
       return Promise.reject(error.response);
     } else {
