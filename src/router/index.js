@@ -146,7 +146,7 @@ const routes = [{
       title: "SnArticle",
       keepAlive: true
     },
-    component: () => import("../views/snArticle/SnArticle.vue")
+    component: () => import("../views/snArticle/Article.vue")
   },
   {
     path: "/SnTalk",

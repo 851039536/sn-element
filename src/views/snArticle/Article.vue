@@ -86,7 +86,7 @@
   import article from "../../api/article.js";
   import labels from "../../api/labels.js";
   export default {
-    name: "SnArticle",
+    name: "Article",
     components: {
       SnLabels,
       SnSort
@@ -227,35 +227,5 @@
 </script>
 
 <style lang="scss" scoped>
-  #snArticle {
-    width: 78%;
-    margin-left: 20%;
-    @apply mt-2;
-
-    .SnArticle-1 {
-      position: absolute;
-      top: 102px;
-      right: 110px;
-      z-index: 1;
-    }
-
-    .SnArticle-2 {
-      // @apply bg-gray-200;
-    }
-
-    .SnArticle_main {
-      .el-link {
-        margin-left: 12px;
-        padding: 5px;
-      }
-
-      .SnArticle_main_content {
-        display: inline-block;
-
-        .el-link {
-          @apply bg-white mt-1;
-        }
-      }
-    }
-  }
+  @import "./scss/Article.scss";
 </style>

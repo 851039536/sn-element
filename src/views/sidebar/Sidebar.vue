@@ -3,12 +3,7 @@
     <el-aside width="100%">
       <el-row class="tac">
         <el-col :span="24">
-          <el-menu
-            default-active="2"
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
-          >
+          <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
             <el-submenu index="1">
               <template slot="title">
                 <i class="el-icon-setting"></i>
@@ -73,7 +68,13 @@
       SnNavigation(id) {
         switch (id) {
           case 1:
-            this.$router.push("./SnNavigation");
+            // this.$router.push("./SnNavigation");
+            this.$router.push({
+              path: "./SnNavigation",
+              query: {
+                t: +new Date() //保证每次点击路由的query项都是不一样的，确保会重新刷新view
+              }
+            })
             break;
           case 2:
             this.$router.push("/SnArticle");

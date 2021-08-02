@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-12-02 15:25:11
- * @LastEditTime: 2021-07-28 09:18:12
+ * @LastEditTime: 2021-07-31 09:05:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \sn-element\src\views\SnLogin.vue
@@ -93,7 +93,9 @@
                 this.$router.replace("/SnNavigation");
               }
             })
-          );
+          ).catch(err => {
+            alert(err);
+          });;
       }
     }
   };

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-25 10:39:43
- * @LastEditTime: 2021-07-28 09:09:48
+ * @LastEditTime: 2021-07-30 17:19:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \sn-element\src\views\SnHeader\SnHeader.vue
@@ -11,8 +11,8 @@
     <div class="snHeader_main">
       <el-menu
         :default-active="activeIndex"
-        class="el-menu-demo"
         mode="horizontal"
+        :class="{active: isActive , line: isLine}"
         @select="handleSelect"
       >
         <el-menu-item index="1">处理中心</el-menu-item>
@@ -47,16 +47,24 @@
 </template>
 
 <script>
+
   export default {
     name: "SnHeader",
     components: {},
     data() {
       return {
         activeIndex: "1",
-        activeIndex2: "1"
+        active: 'el-menu',
+        isActive: false,  //设置boolean值决定是否启用
+        isLine: true
       };
     },
     methods: {
+      but() {
+        this.isActive = !this.isActive
+        // return { active: this.isActive, line: this.isLine }
+      },
+
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
@@ -78,6 +86,13 @@
     left: 0;
     z-index: 1;
 
+    .el-menu {
+      // @apply bg-red-400;
+    }
+    .active {
+      color: blue;
+      @apply bg-red-400;
+    }
     .snHeader_main {
       .sn-SnHeader-1-1 {
         @apply float-right;
