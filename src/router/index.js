@@ -230,6 +230,11 @@ const routes = [{
     path: "/SnOneAdd",
     name: "SnOneAdd",
     component: () => import("../views/snOne/SnOneAdd.vue")
+  },
+  {
+    path: "/SetBlog",
+    name: "SetBlog",
+    component: () => import("../views/SnSetBlog/SetBlog.vue")
   }
 ];
 

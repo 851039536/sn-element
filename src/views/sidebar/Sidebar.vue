@@ -12,7 +12,7 @@
               <el-menu-item-group>
                 <el-menu-item index="1-1" @click.native="SnNavigation(6)">图床管理</el-menu-item>
                 <el-menu-item index="
-								 1-2">选项2</el-menu-item>
+								 1-2" @click.native="SnNavigation(9)">博客设置</el-menu-item>
               </el-menu-item-group>
 
               <el-submenu index="1-4">
@@ -96,6 +96,9 @@
             break;
           case 8:
             this.$router.push("/SnOne");
+            break;
+          case 9:
+            this.$router.push("/SetBlog");
             break;
           default:
             this.$router.push("./SnLogin");
