@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-25 10:39:43
- * @LastEditTime: 2021-07-28 09:02:54
+ * @LastEditTime: 2021-09-08 12:25:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \sn-element\src\views\Home.vue
@@ -22,15 +22,15 @@
 </template>
 
 <script>
-  export default {
-    name: "Home",
-    components: {}
-  };
+export default {
+  name: "Home",
+  components: {}
+};
 </script>
 <style>
-  .home {
-    /*height: 100px;*/
-    /*width: 100%;*/
-    /*background-color: #ee7700;*/
-  }
+.home {
+  /*height: 100px;*/
+  /*width: 100%;*/
+  /*background-color: #ee7700;*/
+}
 </style>
